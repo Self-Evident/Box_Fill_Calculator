@@ -3,8 +3,8 @@
 ### The Box Fill Calculator, or BFC, calculates electrical box fill allowances based on NEC 314.16(B) rules.
 
 * Calculations are performed automatically on every input!
-* Instantly see changes to the Total Allowance & suggested box list as you type!
-(If your screen is big enough to see both the input & results tables, of course.)
+* Instantly see changes to the Total Allowance & suggested box list as you type!<br>
+ &nbsp; (If your screen is big enough to see both the input & results tables, of course.)
 * Lists suitable standard box sizes based on the calculated Total Allowance.
 
 ### Demo: [spokecalculator.net/BFC](http://spokecalculator.net/BFC)
