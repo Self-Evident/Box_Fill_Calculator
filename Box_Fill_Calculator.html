@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<title>The Box Fill Calculator</title>
+
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="updated" content="2019-02-27 1749ET">
+
+<script id=BFC_LICENSE type="text/template">
+Copyright © 2019-     https://github.com/Self-Evident
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</script>
+
+
+<style>
+body { margin: 0; overflow-y: scroll; background-color: rgb(220,230,255); }
+
+input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 5pt 2pt #00F }
+
+input.BFC, select.BFC { font-size: 1rem; font-family: arial; text-align: center; border-radius: 4px; border: solid 1px #888; }
+input[type=text].BFC  { width: 3rem; padding: 1px 0; font-weight: bold }
+
+select.BFC        { padding: 3px 0rem 1px 0rem; width: 4.5rem; }
+select.BFC option { font-size: 1em; }
+
+
+/*** Damn FF focusring! And styling selects in general...*****************/
+select.BFC:-moz-focusring { color: transparent; text-shadow: 0 0 0 #000; }
+
+select.BFC_awg8:-moz-focusring  { color: transparent; text-shadow: 0 0 0 #FFF;}
+select.BFC_awg6:-moz-focusring  { color: transparent; text-shadow: 0 0 0 #FFF;}
+
+option.BFC_none  { color: black; }
+option.BFC_awg14 { color: black; }
+option.BFC_awg12 { color: black; }
+option.BFC_awg10 { color: black; }
+/*************************************************************************/
+
+
+button.BFC        {
+	border-radius: 4px; border: solid 1px gray; 
+	padding: 5px; margin: 0 0 .5rem 0; 
+	height: 1.8rem;
+}
+button.BFC:hover  { background-color: #FFF; }
+button.BFC:active { border: solid 3px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 3px #888; } /* For spacebar & enter keydown/up events. */
+
+.BFC:focus             { outline:none; }
+.BFC::-moz-focus-inner { border:0; }
+
+table.BFC        { border-collapse: collapse; border: solid 1px #555; display: inline-table; vertical-align: top; }
+.BFC td, .BFC th { border: solid 1px #555; padding: .3rem;  }
+
+h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
+h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
+
+.BFC_container   { padding: 0; margin: 0 0rem 0 1rem; }
+.BFC_container * { box-sizing: border-box; font-family: arial; }
+.BFC_conductor_container  { display: inline-block; margin: 0 .5rem .5rem 0; vertical-align: top; max-width: 29rem; }
+.BFC_results_and_reset    { display: inline-block; }
+
+.BFC_conductors { margin: 0 0 0 0; width: 100%; }
+.BFC_conductors th   { text-align: left; padding: 1rem .2rem .2rem .2rem; font-size: 1rem; font-weight: normal; }
+.BFC_conductors td   { width: 20% }
+.BFC_conductors td.wiresize { text-align: center; }
+
+.BFC_additional { width: 100%; margin: 1rem 0 .5rem 0; }
+.BFC_additional tr td:first-child { text-align: center; width: 6rem; }
+.BFC_additional tr.BFC_devices_input td { border-bottom: dotted 1px #777; }
+.BFC_additional tr.BFC_devices_desc  td { border-top: 0; }
+
+.BFC_results                 { margin: 0 .5rem .5rem 0; }
+.BFC_results td:last-of-type { text-align: center; width: 5rem; }
+.BFC_results th              { padding: .6rem .2rem .5rem .2rem; text-align: center; font-size: 1.1rem; }
+.BFC_results_col_hdrs        { font-weight: bold; }
+.BFC_results td.result_item { padding-left: 1.5rem; }
+
+.BFC_min_required_size      { background-color: white; }
+#BFC_Min_Box_Size           { color: blue; font-weight: bold; }
+
+.BFC_usable_boxes       { width: 21.5rem; margin: 0 0 .5rem 0; }
+.BFC_usable_boxes td    { text-align: center; }
+.BFC_usable_boxes td    { padding: .3rem .2rem; }
+.BFC_usable_boxes tr td { white-space: pre; }
+.BFC_usable_boxes tr:first-child th { line-height: 1.3rem;  }
+.BFC_usable_boxes td:first-child  { width: 7.8rem; }
+.BFC_usable_boxes th.BFC_vol_col { width: 3.5rem; }
+
+.BFC_sub_header { font-weight: normal; font-size: 95%; }
+
+#BFC_devices { margin: 0 0 .2rem 0; }
+
+#BFC_largest_device_conductor:disabled { opacity: .5; }
+
+.BFC_none  { background-color: #DDE }
+.BFC_awg14 { background-color: #FFFee0 }
+.BFC_awg12 { background-color: #FFFF00 }
+.BFC_awg10 { background-color: orange }
+.BFC_awg8  { background-color: #444; color: white; }
+.BFC_awg6  { background-color: #222; color: white; }
+
+.BFC_non_zero { background-color: #cFc; }
+.BFC_frac { display: inline-block; margin: 0 .2rem 0 .1rem; }
+
+.BFC_suitable_standard_box { background-color: #FFF; font-weight: bold }
+
+noscript.BFC {
+    position: fixed;
+    top: 10px;
+	border: solid 3px #633;
+	background-color: rgb(255,255,255,.9);
+	padding: 0; 
+	margin: 0 1rem 0 0;
+}
+
+noscript.BFC h2 {  margin: .5rem .5rem; }
+
+.BFC_disclaimer { border: solid 1px #555; padding: 1rem; margin: .5rem 0; }
+
+
+/**************************************./
+* Desired behavior of Conductors table: Depending on browswer width,
+* either no input cell should wrap:
+*       +----------------------------------------------------------------+
+*       | #14 [    ] | #12 [    ] | #10 [    ] |  #8 [    ] |  #6 [    ] |
+*       |------------+------------+------------+------------+------------|
+*
+* or all should:  +--------------------------------------------+
+*                 |  #14   |  #12   |  #10   |   #8   |   #6   |
+*                 | [    ] | [    ] | [    ] | [    ] | [    ] |
+*                 |--------+--------+--------+--------+--------|
+*
+* Without the styles below this comment, depending on browser width and
+* if .BFC_helps are set to {display:none}, the cells of the conductors table 
+* may not all wrap at once.
+*       +----------------------------------------------------------------+
+* eg:   | #14 [    ] | #12 [    ] | #10 [    ] |  #8 [    ] |     #6     |
+*       |            |            |            |            |   [    ]   |
+*       |------------+------------+------------+------------+------------|
+*
+* And, we just can't have that... :)
+/***************************************/
+.wiresize div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
+div.BFC_wrap_hack2 {height: 1rem; line-height: 0rem; }
+div.BFC_wrap_hack3 { display: inline-block; width: 7rem; height: 0; visibility: hidden; }
+.BFC_conductors th.BFC_wrap_hack3 { padding-top: 0; }
+/***************************************/
+
+.BFC_hide_help { display: none; }
+#BFC_conductor_help { border: solid 1px #555; margin: .5rem 0 .5rem 0; padding: .5rem; }
+</style>
+
+
+
+
+<div class="BFC_container">
+
+<noscript class=BFC>
+	<h2>Javascript is not currently available.</h2>
+	<h2>Javascript is used to perform the box fill calculations.</h2>
+	<h2>Reload page if Javascript has been enabled.</h2>
+</noscript>
+
+
+<h2 class=BFC>The Box Fill Calculator</h2> <h4 class=BFC>Per NEC 314.16(B)</h4>
+
+<br>
+
+
+<div class=BFC_conductor_container>
+
+<table class="BFC BFC_conductors">
+	<tr><th colspan=5 class=BFC_wrap_hack3><div class=BFC_wrap_hack2>
+		<div class=BFC_wrap_hack3></div><div class=BFC_wrap_hack3></div><div class=BFC_wrap_hack3></div><div class=BFC_wrap_hack3></div></div>
+		<b>Number of Conductors Terminating in the Box</b><br>
+		<div class="BFC_help BFC_hide_help">Enter number of conductors that originate outside the box and terminate in the box.</div>
+	</th></tr>
+	<tr>
+		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input maxlength=2 class=BFC id="BFC_terms_awg14" type="text"></label></td>
+		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input maxlength=2 class=BFC id="BFC_terms_awg12" type="text"></label></td>
+		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input maxlength=2 class=BFC id="BFC_terms_awg10" type="text"></label></td>
+		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input maxlength=2 class=BFC id="BFC_terms_awg8"  type="text"></label></td>
+		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input maxlength=2 class=BFC id="BFC_terms_awg6"  type="text"></label></td>
+	</tr>
+
+	<tr><th colspan="5"><b>Number of Conductors Spliced in the Box</b><br>
+			<div class="BFC_help BFC_hide_help">Enter number of conductors that originate outside the box and are spliced in the box.</div>
+	</th></tr>
+	<tr>
+		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input maxlength=2 class=BFC id="BFC_splices_awg14" type="text"></label></td>
+		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input maxlength=2 class=BFC id="BFC_splices_awg12" type="text"></label></td>
+		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input maxlength=2 class=BFC id="BFC_splices_awg10" type="text"></label></td>
+		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input maxlength=2 class=BFC id="BFC_splices_awg8"  type="text"></label></td>
+		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input maxlength=2 class=BFC id="BFC_splices_awg6"  type="text"></label></td>
+	</tr>
+
+	<tr><th colspan="5"><b>Number of Conductors that Pass Thru the Box</b><br>
+			<div class="BFC_help BFC_hide_help">Enter number of conductors that pass through the box without splice or termination.</div>
+	</th></tr>
+	<tr>
+		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input maxlength=2 class=BFC id="BFC_pass_awg14" type="text"></label></td>
+		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input maxlength=2 class=BFC id="BFC_pass_awg12" type="text"></label></td>
+		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input maxlength=2 class=BFC id="BFC_pass_awg10" type="text"></label></td>
+		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input maxlength=2 class=BFC id="BFC_pass_awg8"  type="text"></label></td>
+		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input maxlength=2 class=BFC id="BFC_pass_awg6"  type="text"></label></td>
+	</tr>
+
+	<tr><th colspan="5"><b>Number of Conductor Loops with 12" of conductor.</b><br>
+			<div class="BFC_help BFC_hide_help">Number of loops or coils of unbroken conductors that are at least 12" in length.</div>
+	</th></tr>
+	<tr>
+		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input maxlength=2 class=BFC id="BFC_loops_awg14" type="text"></label></td>
+		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input maxlength=2 class=BFC id="BFC_loops_awg12" type="text"></label></td>
+		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input maxlength=2 class=BFC id="BFC_loops_awg10" type="text"></label></td>
+		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input maxlength=2 class=BFC id="BFC_loops_awg8"  type="text"></label></td>
+		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input maxlength=2 class=BFC id="BFC_loops_awg6"  type="text"></label></td>
+	</tr>
+</table>
+
+<br>
+<table class="BFC BFC_additional">
+	<tr><th colspan="2"><b>Additional Fill Information</b></th></tr>
+	<tr>
+		<td>
+			<select class=BFC id="BFC_internal_clamp">
+				<option value=0 selected>No</option>
+				<option value=1>Yes</option>
+			</select>
+		</td>
+		<td>
+			Are there any <b>internal cable clamps</b> to the box?<br>
+			<div class="BFC_help BFC_hide_help">Allowance based on largest conductor in the box.</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input maxlength=2 class=BFC id="BFC_support_fittings" type="text">
+		</td>
+		<td>
+			Number of <b>Support Fittings</b> present in the box.<br>
+			<div class="BFC_help BFC_hide_help">Luminaire studs or hickeys.<br>
+			Allowance based on largest conductor in the box.</div>
+		</td>
+	</tr>
+	<tr class=BFC_devices_input>
+		<td><input maxlength=2 class=BFC id="BFC_devices" type="text"></td>
+		<td>
+			Number of <b>Devices</b> (gangs) mounted to the box.
+			<div class="BFC_help BFC_hide_help">A double volume allowance shall be provided for each gang required for mounting.</div>
+		</td>
+	</tr>
+	<tr class=BFC_devices_desc>
+		<td>
+			<select class=BFC id="BFC_largest_device_conductor">
+				<option class=BFC_awg14 value="awg14" selected>#14</option>
+				<option class=BFC_awg12 value="awg12">#12</option>
+				<option class=BFC_awg10 value="awg10">#10</option>
+				<option class=BFC_awg8  value="awg8" >#8</option>
+				<option class=BFC_awg6  value="awg6" >#6</option>
+			</select>
+		</td>
+		<td>
+			<b>Largest Conductor</b> connected to the Devices.
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<select class=BFC id="BFC_largest_EGC">
+				<optgroup label="">
+				<option class=BFC_none  value="none" selected>None</option>
+				<option class=BFC_awg14 value="awg14">#14</option>
+				<option class=BFC_awg12 value="awg12">#12</option>
+				<option class=BFC_awg10 value="awg10">#10</option>
+				<option class=BFC_awg8  value="awg8" >#8</option>
+				<option class=BFC_awg6  value="awg6" >#6</option>
+				</optgroup>
+			</select>
+		</td>
+		<td>
+			<b>Largest EGC</b> (ground wire) that enters the box.
+			<div class="BFC_help BFC_hide_help">
+				Equipment Grounding Conductors (EGC), or equipment bonding jumpers.
+			</div>
+		</td>
+	</tr>
+</table><!--//BFC_additional-->
+
+
+
+<div id=BFC_conductor_help class="BFC_help BFC_hide_help">
+	Remember, "conductors", by itself, generally means hot & neutral wires only, and not any ground wires (EGC).
+</div>
+
+<button class=BFC id=BFC_show_help type=reset>Show/Hide Expanded Descriptions</button>
+</div><!--//conductors & additional-->
+
+
+
+<div class=BFC_results_and_reset>
+<table class="BFC BFC_results">
+	<tr><th colspan=2>Results</th></tr>
+	<tr class=BFC_results_col_hdrs><td>Allowance for</td><td>in<sup>3</sup></td></tr>
+	<tr><td class="result_item">#14 Conductors  </td><td id=BFC_allowance_awg14>--</td></tr>
+	<tr><td class="result_item">#12 Conductors  </td><td id=BFC_allowance_awg12>--</td></tr>
+	<tr><td class="result_item">#10 Conductors  </td><td id=BFC_allowance_awg10>--</td></tr>
+	<tr><td class="result_item">#8 Conductors   </td><td id=BFC_allowance_awg8>--</td></tr>
+	<tr><td class="result_item">#6 Conductors   </td><td id=BFC_allowance_awg6>--</td></tr>
+	<tr><td class="result_item">Cable Clamps    </td><td id=BFC_allowance_Clamp>--</td></tr>
+	<tr><td class="result_item">Support Fittings</td><td id=BFC_allowance_Fittings>--</td></tr>
+	<tr><td class="result_item">Devices         </td><td id=BFC_allowance_Devices>--</td></tr>
+	<tr><td class="result_item">EGC             </td><td id=BFC_allowance_Ground>--</td></tr>
+	<tr class=BFC_min_required_size><th>Total Allowance /<br>Minimum Required<br>Box Size</th><th id=BFC_Min_Box_Size>ERROR</th></tr>
+</table>
+<br>
+<button class=BFC id=BFC_reset_inputs type=reset>Reset/Clear Inputs</button>
+<br>
+</div><!--//end BFC_results_and_reset-->
+
+
+<table class="BFC BFC_usable_boxes">
+	<tr>
+		<th colspan=2>Some Suitable Standard Boxes<br>
+			<label class=BFC_sub_header>(Show All Standard Boxes: <input class=BFC id=BFC_show_all_standard_boxes type=checkbox>)</label>
+		</th>
+		<th class=BFC_vol_col>in<sup>3</sup></th>
+	</tr>
+	<tbody id=BFC_box_list><!--//Populated onload--></tbody>
+</table>
+
+
+
+<h3 class="BFC_disclaimer">
+	No guarantees are made as to the accuracy of calculations or compliance with
+	local codes.&nbsp; Verify all calculations with a professional, licensed, electrician.
+</h3>
+
+</div><!--/container-->
+
+
+
+
+
+<script>(function(){
+var D = document;
+function E(id)  { return document.getElementById(id); }
+function E_(id) { return document.getElementById(_NS_ + id); }
+
+var _NS_ = "BFC_";	//A "name space" prefix for id's & classes.
+					//The prefix is also used by itself as a class name (with or without the trailing underscore, "_"),
+					//to select all specified tags for styling only (not used by the JS).
+					//  eg: <style>div.BFC { some styles }</style> <div class=BFC> <div class=BFC> ... etc...
+
+var WIRE_SIZES = ['awg14', 'awg12', 'awg10', 'awg8', 'awg6'];
+
+//Space allowance per conductor for given wire sizes, in cubic inches.
+var ALLOWANCES = {"none": 0, 'awg14':2.00, 'awg12':2.25, 'awg10':2.50, 'awg8':3.00, 'awg6':5.00}
+
+
+
+var $TERMS = {}, $SPLICES = {}, $PASS = {}, $LOOPS = {}, $ALLOWS = {};
+for (var size of WIRE_SIZES) {
+	$TERMS[size]   = E_('terms_'     + size);
+	$SPLICES[size] = E_('splices_'   + size);
+	$PASS[size]    = E_('pass_'      + size);
+	$LOOPS[size]   = E_('loops_'     + size);
+	$ALLOWS[size]  = E_('allowance_' + size);
+}
+var CONDUCTOR_RULES = [$TERMS, $SPLICES, $PASS, $LOOPS]; //But NOT $ALLOWS! $ALLOWS are result fields.
+
+var $INTERNAL_CLAMP    = E_('internal_clamp');
+var $SUPPORT_FITTINGS  = E_('support_fittings');
+var $DEVICES           = E_('devices');
+var $LARGEST_DEVICE_CONDUCTOR = E_('largest_device_conductor');
+var $LARGEST_EGC       = E_('largest_EGC');
+
+var $ALLOWANCE_CLAMP    = E_('allowance_Clamp');
+var $ALLOWANCE_FITTINGS = E_('allowance_Fittings');
+var $ALLOWANCE_DEVICES  = E_('allowance_Devices');
+var $ALLOWANCE_GROUND   = E_('allowance_Ground');
+var $MIN_BOX_SIZE       = E_('Min_Box_Size');
+
+var $RESET_INPUTS   = E_('reset_inputs');
+var $SHOW_ALL_BOXES = E_('show_all_standard_boxes');
+var $SHOW_HELP      = E_('show_help');
+var $BOX_LIST = E_('box_list');
+
+
+//	Standard Metal Boxes															Maximum Number of Conductors* (arranged by AWG size)
+//																					* Where no volume allowances are required
+//	          Box Trade Size                                      Minimum Volume      by 314.16(B)(2) through (B)(5).
+//	["mm",              "in.",                 "description",      "cm^3","in^3",   18, 16, 14, 12, 10,  8, 6],
+var STANDARD_BOXES = [
+  //[       [0],                  [1],                       [2],     [3],   [4],  [5],[6],[7],[8],[9],[10],[11]],
+	["100 x 32",        "(4 x 1 1/4)",         "round/octagonal",     205,  12.5,    8,  7,  6,  5,  5,   5,  2 ],
+	["100 x 38",        "(4 x 1 1/2)",         "round/octagonal",     254,  15.5,   10,  8,  7,  6,  6,   5,  3 ],
+	["100 x 54",        "(4 x 2 1/8)",         "round/octagonal",     353,  21.5,   14, 12, 10,  9,  8,   7,  4 ],
+	["100 x 32",        "(4 x 1 1/4)",         "square",              295,  18.0,   12, 10,  9,  8,  7,   6,  3 ],
+	["100 x 38",        "(4 x 1 1/2)",         "square",              344,  21.0,   14, 12, 10,  9,  8,   7,  4 ],
+	["100 x 54",        "(4 x 2 1/8)",         "square",              497,  30.3,   20, 17, 15, 13, 12,  10,  6 ],
+	["120 x 32",        "(4 11/16 x 1 1/4)",   "square",              418,  25.5,   17, 14, 12, 11, 10,   8,  5 ],
+	["120 x 38",        "(4 11/16 x 1 1/2)",   "square",              484,  29.5,   19, 16, 14, 13, 11,   9,  5 ],
+	["120 x 54",        "(4 11/16 x 2 1/8)",   "square",              689,  42.0,   28, 24, 21, 18, 16,  14,  8 ],
+	[ "75 x 50 x 38",   "(3 x 2 x 1 1/2)",     "device",              123,   7.5,    5,  4,  3,  3,  3,   2,  1 ],
+	[ "75 x 50 x 50",   "(3 x 2 x 2)",         "device",              164,  10.0,    6,  5,  5,  4,  4,   3,  2 ],
+	[ "75 x 50 x 57",   "(3 x 2 x 2 1/4)",     "device",              172,  10.5,    7,  6,  5,  4,  4,   3,  2 ],
+	[ "75 x 50 x 65",   "(3 x 2 x 2 1/2)",     "device",              205,  12.5,    8,  7,  6,  5,  5,   4,  2 ],
+	[ "75 x 50 x 70",   "(3 x 2 x 2 3/4)",     "device",              230,  14.0,    9,  8,  7,  6,  5,   4,  2 ],
+	[ "75 x 50 x 90",   "(3 x 2 x 3 1/2)",     "device",              295,  18.0,   12, 10,  9,  8,  7,   6,  3 ],
+	["100 x 54 x 38",   "(4 x 2 1/8 x 1 1/2)", "device",              169,  10.3,    6,  5,  5,  4,  4,   3,  2 ],
+	["100 x 54 x 48",   "(4 x 2 1/8 x 1 7/8)", "device",              213,  13.0,    8,  7,  6,  5,  5,   4,  2 ],
+	["100 x 54 x 54",   "(4 x 2 1/8 x 2 1/8)", "device",              238,  14.5,    9,  8,  7,  6,  5,   4,  2 ],
+	[ "95 x 50 x 65",   "(3 3/4 x 2 x 2 1/2)", "masonry box/gang",    230,  14.0,    9,  8,  7,  6,  5,   4,  2 ],
+	[ "95 x 50 x 90",   "(3 3/4 x 2 x 3 1/2)", "masonry box/gang",    344,  21.0,   14, 12, 10,  9,  8,   7,  4 ],
+	["min. 44.5 depth", "FS - (1 3/4) ",       "single cover/gang",   221,  13.5,    9,  7,  6,  6,  5,   4,  2 ],
+	["min. 60.3 depth", "FD - (2 3/8) ",       "single cover/gang",   295,  18.0,   12, 10,  9,  8,  7,   6,  3 ],
+	["min. 44.5 depth", "FS - (1 3/4) ",       "multiple cover/gang", 295,  18.0,   12, 10,  9,  8,  7,   6,  3 ],
+	["min. 60.3 depth", "FD - (2 3/8) ",       "multiple cover/gang", 395,  24.0,   16, 13, 12, 10,  9,   8,  4 ],
+];
+
+
+
+
+function Format_Fraction(string, lead, numer, denom) {
+	var search_for = lead + numer + "/" + denom;
+	var replace_with = "<div class=BFC_frac>" + numer + "&frasl;" + denom + "</div>";
+	return string.replace( new RegExp( search_for, 'g' ), replace_with )
+}//end Format_Fraction()
+
+
+
+
+function Sort_Format_STANDARD_BOXES() {
+	//Sort boxes by volume (either cm^3 [3],  or in^3 [4]).
+	STANDARD_BOXES.sort(function(a,b) { return a[3] - b[3] }); //Remember, array indexes count from 0...
+
+	for (var box of STANDARD_BOXES) {
+		box[1] = Format_Fraction(box[1], " ",  "1",  "8");
+		box[1] = Format_Fraction(box[1], " ",  "3",  "8");
+		box[1] = Format_Fraction(box[1], " ",  "7",  "8");
+		box[1] = Format_Fraction(box[1], " ",  "1",  "4");
+		box[1] = Format_Fraction(box[1], " ",  "3",  "4");
+		box[1] = Format_Fraction(box[1], " ",  "1",  "2");
+		box[1] = Format_Fraction(box[1], " ", "11", "16");
+	}
+}//end Sort_Format_STANDARD_BOXES()
+
+
+
+
+function Normalize_Event(event) {
+	//Normalize the event & which/keycode/charcode...
+	if (!event) {var event = window.event;} //for IE
+	var key_code = event.which || event.keyCode || event.charCode;
+	event.key_code = key_code;
+	return event;
+}//end Normalize_Event()
+
+
+
+
+function Scroll_Blur(event){
+	//Permit using esc to remove focus, and some keyboard navigation while in <input>'s.
+
+	Normalize_Event(event);
+	var key = event.key_code;
+	
+	var ESC = 27, AU = 38, AD = 40, PU = 33, PD = 34;
+
+	//remove focus from input/select to allow keyboard arrows/pageup/pagedown/etc page scrolling.
+	if (key == ESC) { D.activeElement.blur(); return; }
+
+	if (event.target.tagName == "INPUT") {
+		//Arrow down scrolls the page up, towards the bottom of the page, and vice-versa.
+		if      (key == AU) { window.scrollBy(0, -38); }
+		else if (key == AD) { window.scrollBy(0,  38); }
+		else if (key == PU) { window.scrollBy(0,-400); }
+		else if (key == PD) { window.scrollBy(0, 400); }
+	}
+}//end Scroll_Blur()
+
+
+
+
+function Parse_Int(value) {
+	var value = parseInt(value);
+	if (isNaN(value)) { value = 0; }
+	return value;
+}//end Parse_Int()
+
+
+
+
+function Normalize_Input($text_input) {
+	var value = Parse_Int($text_input.value);
+	if (value > 0) { $text_input.value = value; }
+	else           { $text_input.value = ""; value = 0; }
+	return value;
+}//end Normalize_Input();
+
+
+
+
+function Highlight_Input($rule) {
+	//Highlight any non-zero conductor terms/splices/passthrus/loops.
+	if (Parse_Int($rule.value) > 0) {
+		$rule.classList.add(_NS_ + 'non_zero');
+	}
+	else { $rule.classList.remove(_NS_ + 'non_zero'); }
+}//end Highlight_Input()
+
+
+
+
+function Set_Style_per_awg(allowance, $what, new_size) {
+	//Pass 1 for allowance if setting style regardless.
+
+	if (allowance == 0) { new_size = "none"; }
+
+	//Remove any existing size styles...
+	for (var old_size in ALLOWANCES) { $what.classList.remove(_NS_ + old_size); }
+
+	//Add style for new size.
+	$what.classList.add(_NS_ + new_size);
+}//end Set_Style_per_awg()
+
+
+
+
+function Largest_Conductor_in_Box() {
+	//Return largest conductor size present in box: awg6, awg8, awg10, awg12, or awg14.
+	var largest_wire = "none";
+
+	//Go thru WIRE_SIZES[] in reverse, from largest to smallest wire size.
+	//Remember, in awg, smaller numbers are bigger wires (awg6 > awg8).
+	GET_MAX_SIZE: for (var s = WIRE_SIZES.length-1; s >= 0; s--) {
+		var largest_conductor = "";
+		for (var rule of CONDUCTOR_RULES) {
+			if (Parse_Int(rule[WIRE_SIZES[s]].value) > 0) {
+				largest_wire = WIRE_SIZES[s];
+				break GET_MAX_SIZE;
+			}
+		}
+	}
+
+	return largest_wire;
+}//end Largest_Conductor_in_Box()
+
+
+
+
+function Output_Result($output, allowance, size) {
+	//allowance is a number, the result. size will be "awg6", or "awg14", etc...
+	if (allowance < 1) { $output.innerHTML = '--'; }
+	else { $output.innerHTML = allowance; }
+
+	if (size) { Set_Style_per_awg(allowance, $output, size); }
+}//end Output_Result()
+
+
+
+
+function List_Standard_Boxes(min_size) {
+
+	var show_all = $SHOW_ALL_BOXES.checked;
+	var rows = "";
+	var count = 0;
+
+	if (!show_all && (min_size < 1)) { $BOX_LIST.innerHTML = ""; return; }
+
+	for (var box of STANDARD_BOXES) {
+		if (!show_all && ((box[4] < min_size) || (count > 10))) { continue }
+		count++;
+
+		if (box[4] >= min_size) { var classes = " class=BFC_suitable_standard_box"; }
+		else                    { var classes = ""; }
+		
+		rows += "<tr" + classes + ">";
+		rows += "<td>" + box[1] + "</td>";
+		rows += "<td>" + box[2] + "</td>";
+		rows += "<td>" + box[4] + "</td>";
+		rows += "</tr>\n";
+	}
+
+	if (show_all || min_size > 0) { $BOX_LIST.innerHTML = rows; }
+	else                          { $BOX_LIST.innerHTML = ""; }
+
+}//end List_Standard_Boxes()
+
+
+
+
+function Init_States() {
+
+	//Non-zero input values....
+	for (var size of WIRE_SIZES){ for (var rule of CONDUCTOR_RULES) { Highlight_Input(rule[size]); } }
+
+	if (Parse_Int($DEVICES.value) < 1) { $LARGEST_DEVICE_CONDUCTOR.disabled = true; }
+	else                               { $LARGEST_DEVICE_CONDUCTOR.disabled = false; }
+
+	Set_Style_per_awg(1, $LARGEST_DEVICE_CONDUCTOR, $LARGEST_DEVICE_CONDUCTOR.value);
+	Set_Style_per_awg(1, $LARGEST_EGC, $LARGEST_EGC.value);
+}//end Init_States()
+
+
+
+
+function Calc_Conductor_Allowances() {
+	var conductor_allowances_total = 0;
+
+	//12" $LOOPS are counted twice...
+	var conductor_rules = CONDUCTOR_RULES.slice();
+	conductor_rules.push($LOOPS);
+
+	for (var size of WIRE_SIZES) {
+		var allowance_count = 0;
+		for (var rule of conductor_rules) {
+			var $rule = rule[size];
+			allowance_count += Normalize_Input($rule);
+		}
+
+		var allowance_for_size = (allowance_count * ALLOWANCES[size]);
+		Output_Result($ALLOWS[size], allowance_for_size, size);
+		conductor_allowances_total += allowance_for_size;
+	}
+
+	return conductor_allowances_total;
+}//end Calc_Conductor_Allowances()
+
+
+
+
+function Calculate_Min_Box_Size() {
+
+	var largest_conductor_in_box    = Largest_Conductor_in_Box();
+	var allowance_largest_conductor = ALLOWANCES[largest_conductor_in_box];
+
+	//Conductors
+	var total_allowances =  Calc_Conductor_Allowances();
+
+	//Internal cable clamp
+	var allowance = ($INTERNAL_CLAMP.value * allowance_largest_conductor);
+	total_allowances += allowance;
+	Output_Result($ALLOWANCE_CLAMP, allowance, largest_conductor_in_box);
+
+	//Support Fittings
+	var allowance = Normalize_Input($SUPPORT_FITTINGS) * allowance_largest_conductor;;
+	total_allowances += allowance 
+	Output_Result($ALLOWANCE_FITTINGS, allowance, largest_conductor_in_box);
+
+	//Devices mounted to box:      "a double volume allowance ..."
+	var allowance = Normalize_Input($DEVICES) * 2 * ALLOWANCES[$LARGEST_DEVICE_CONDUCTOR.value];
+	total_allowances += allowance;
+	Output_Result($ALLOWANCE_DEVICES, allowance, $LARGEST_DEVICE_CONDUCTOR.value);
+
+	//EGC
+	var allowance = ALLOWANCES[$LARGEST_EGC.value]
+	total_allowances += allowance;
+	Output_Result($ALLOWANCE_GROUND, allowance, $LARGEST_EGC.value);
+
+
+	Set_Style_per_awg(Parse_Int($INTERNAL_CLAMP.value),   $INTERNAL_CLAMP,   largest_conductor_in_box);
+	Set_Style_per_awg(Parse_Int($SUPPORT_FITTINGS.value), $SUPPORT_FITTINGS, largest_conductor_in_box);
+	Set_Style_per_awg(Parse_Int($DEVICES.value),          $DEVICES,          $LARGEST_DEVICE_CONDUCTOR.value);
+
+	List_Standard_Boxes(total_allowances);
+
+	$MIN_BOX_SIZE.innerHTML = total_allowances;
+
+	return total_allowances;
+}//end Calculate_Min_Box_Size()
+
+
+
+
+function Space_or_Enter_on_Button(e, $btn) {
+		//Capture space & enter keys to toggle button style, to simulate mouse-click on <button>s.
+		//That is, similar to the effect of ":active" styles of the mouse click events.
+
+		Normalize_Event(e);
+
+		if (e.type == "keydown") {
+			if (e.key_code == 32 || e.key_code == 13) { $btn.classList.add(_NS_ + 'button_active'); }
+		}
+		
+		if (e.type == "keyup") {
+			if (e.key_code == 32 || e.key_code == 13) { $btn.classList.remove(_NS_ + 'button_active'); }
+		}
+}//end Space_or_Enter_on_Button()
+
+
+
+
+function Assign_Events() {
+
+	D.addEventListener("keydown", function(event){Scroll_Blur(event)} );
+
+	for (var size of WIRE_SIZES) {
+		$TERMS  [size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
+		$SPLICES[size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
+		$PASS   [size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
+		$LOOPS  [size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
+	}
+
+
+	$INTERNAL_CLAMP.onchange = function(){ Calculate_Min_Box_Size(); 	}
+
+	$SUPPORT_FITTINGS .oninput = function(){ Normalize_Input(this); Calculate_Min_Box_Size(); }
+
+
+	$DEVICES.onkeydown =  function(e){
+		//Handle tab presses only.
+		//If $DEVICES.value changes from 0 to (> 0), and tab is pressed, set $LARGEST_DEVICE_CONDUCTOR.focus().
+		//$LARGEST_DEVICE_CONDUCTOR is disabled if $DEVICES.value == 0, and is not yet enabled & able to receive focus
+		//until after $DEVICES.onchange is processed, as onchange events are processed after onkeydown.
+		Normalize_Event(e);
+		if (e.shiftKey || (e.key_code != 9)) { return; }
+		
+		if (Parse_Int(this.value) == 0) 
+			 { var target = $LARGEST_EGC             ; }
+		else { var target = $LARGEST_DEVICE_CONDUCTOR; }
+		
+		setTimeout(function() { target.focus() }, 1);
+	} 
+	
+	$DEVICES.oninput = function(){
+		Calculate_Min_Box_Size();
+		Set_Style_per_awg(Parse_Int(this.value), this, $LARGEST_DEVICE_CONDUCTOR.value);
+		if (Parse_Int(this.value) < 1) { $LARGEST_DEVICE_CONDUCTOR.disabled = true; }
+		else                           { $LARGEST_DEVICE_CONDUCTOR.disabled = false; }
+	}
+
+	$LARGEST_DEVICE_CONDUCTOR.onchange = function(){ Calculate_Min_Box_Size(); Set_Style_per_awg(1, this, this.value); }
+	$LARGEST_EGC             .onchange = function(){ Calculate_Min_Box_Size(); Set_Style_per_awg(1, this, this.value); }
+
+
+	$RESET_INPUTS.onkeydown = function(e) { Space_or_Enter_on_Button(e, this); }
+	$RESET_INPUTS.onkeyup   = function(e) { Space_or_Enter_on_Button(e, this); }
+	$RESET_INPUTS.onclick   = function() {
+		for (var rule of CONDUCTOR_RULES) { for (var size in rule) { rule[size].value = ""; } }
+		$INTERNAL_CLAMP.selectedIndex = 0;
+		$SUPPORT_FITTINGS.value = "";
+		$DEVICES.value = "";
+		$LARGEST_DEVICE_CONDUCTOR.selectedIndex = 0;
+		$LARGEST_EGC.selectedIndex = 0;
+		Calculate_Min_Box_Size();
+		Init_States();
+	}
+
+
+	$SHOW_HELP.onkeydown = function(e) { Space_or_Enter_on_Button(e, this); }
+	$SHOW_HELP.onkeyup   = function(e) { Space_or_Enter_on_Button(e, this); }
+	$SHOW_HELP.onclick   = function() {
+		var helps = D.getElementsByClassName(_NS_ + 'help');
+		for (var $section of helps) { $section.classList.toggle(_NS_ + 'hide_help'); }
+	}
+
+
+	$SHOW_ALL_BOXES.onclick = function() { List_Standard_Boxes(Calculate_Min_Box_Size()); }
+
+}//end Assign_Events()
+
+
+
+
+function Init() { //***********************************************************/
+
+	Assign_Events();
+
+	Init_States();
+
+	Sort_Format_STANDARD_BOXES();
+
+	Calculate_Min_Box_Size();
+
+}//end Init() //***************************************************************/
+window.addEventListener("load", function() { Init() } );
+})();</script>
