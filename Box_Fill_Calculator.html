@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-02-28 0031 ET">
+<meta name="updated" content="2019-02-28 1300 ET">
 
 <script id=BFC_LICENSE type="text/template">
 Copyright © 2019-     https://github.com/Self-Evident
@@ -33,7 +33,7 @@ SOFTWARE.
 <style>
 body { margin: 0; overflow-y: scroll; background-color: rgb(220,230,255); }
 
-input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 5pt 2pt #00F }
+input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 2pt 1pt #0F0; }
 
 input.BFC, select.BFC { font-size: 1rem; font-family: arial; text-align: center; border-radius: 4px; border: solid 1px #888; }
 input[type=text].BFC  { width: 3rem; padding: 1px 0; font-weight: bold }
@@ -81,13 +81,17 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 .BFC_conductors { margin: 0 0 0 0; width: 100%; }
 .BFC_conductors th   { text-align: left; padding: 1rem .2rem .2rem .2rem; font-size: 1rem; font-weight: normal; }
-.BFC_conductors td   { width: 20% }
+.BFC_conductors td   { width: 20% } /* See comments & styles at end of sytle sheet. */
 .BFC_conductors td.wiresize { text-align: center; }
 
 .BFC_additional { width: 100%; margin: 1rem 0 .5rem 0; }
 .BFC_additional tr td:first-child { text-align: center; width: 6rem; }
-.BFC_additional tr.BFC_devices_input td { border-bottom: dotted 1px #777; }
-.BFC_additional tr.BFC_devices_desc  td { border-top: 0; }
+.BFC_additional tr.BFC_devices_input_row td { border-bottom: dotted 1px #777; }
+.BFC_additional tr.BFC_largest_device_conductor_row  td { border-top: 0; }
+
+#BFC_devices { margin: 0 0 0 0; }
+
+#BFC_largest_device_conductor:disabled { opacity: .5; }
 
 .BFC_results                 { margin: 0 .5rem .5rem 0; }
 .BFC_results td:last-of-type { text-align: center; width: 5rem; }
@@ -108,10 +112,6 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 .BFC_sub_header { font-weight: normal; font-size: 95%; }
 
-#BFC_devices { margin: 0 0 .2rem 0; }
-
-#BFC_largest_device_conductor:disabled { opacity: .5; }
-
 .BFC_none  { background-color: #DDE }
 .BFC_awg14 { background-color: #FFFee0 }
 .BFC_awg12 { background-color: #FFFF00 }
@@ -119,7 +119,7 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_awg8  { background-color: #444; color: white; }
 .BFC_awg6  { background-color: #222; color: white; }
 
-.BFC_non_zero { background-color: #cFc; }
+.BFC_non_zero { background-color: #dFd; }
 .BFC_frac { display: inline-block; margin: 0 .2rem 0 .1rem; }
 
 .BFC_suitable_standard_box { background-color: #FFF; font-weight: bold }
@@ -151,7 +151,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 *                 |--------+--------+--------+--------+--------|
 *
 * Without the styles below this comment, depending on browser width and
-* if .BFC_helps are set to {display:none}, the cells of the conductors table 
+* if .BFC_help's are set to {display:none}, the cells of the conductors table 
 * may not all wrap at once.
 *       +----------------------------------------------------------------+
 * eg:   | #14 [    ] | #12 [    ] | #10 [    ] |  #8 [    ] |     #6     |
@@ -159,11 +159,10 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 *       |------------+------------+------------+------------+------------|
 *
 * And, we just can't have that... :)
+*
 /***************************************/
-.wiresize div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
-div.BFC_wrap_hack2 {height: 1rem; line-height: 0rem; }
-div.BFC_wrap_hack3 { display: inline-block; width: 7rem; height: 0; visibility: hidden; }
-.BFC_conductors th.BFC_wrap_hack3 { padding-top: 0; }
+.BFC_conductors tr td:last-child { width: 0rem; } /*Why??? I don't know - but it fixed it! And number of rem doesnt' seem to matter...*/
+.wiresize div.BFC_wrap_hack1     { display: inline-block; width: 2.0rem; }
 /***************************************/
 
 .BFC_hide_help { display: none; }
@@ -190,8 +189,7 @@ div.BFC_wrap_hack3 { display: inline-block; width: 7rem; height: 0; visibility: 
 <div class=BFC_conductor_container>
 
 <table class="BFC BFC_conductors">
-	<tr><th colspan=5 class=BFC_wrap_hack3><div class=BFC_wrap_hack2>
-		<div class=BFC_wrap_hack3></div><div class=BFC_wrap_hack3></div><div class=BFC_wrap_hack3></div><div class=BFC_wrap_hack3></div></div>
+	<tr><th colspan=5>
 		<b>Number of Conductors Terminating in the Box</b><br>
 		<div class="BFC_help BFC_hide_help">Enter number of conductors that originate outside the box and terminate in the box.</div>
 	</th></tr>
@@ -262,14 +260,14 @@ div.BFC_wrap_hack3 { display: inline-block; width: 7rem; height: 0; visibility: 
 			Allowance based on largest conductor in the box.</div>
 		</td>
 	</tr>
-	<tr class=BFC_devices_input>
+	<tr class=BFC_devices_input_row>
 		<td><input type=text class=BFC id="BFC_devices" maxlength=2></td>
 		<td>
 			Number of <b>Devices</b> (gangs) mounted to the box.
 			<div class="BFC_help BFC_hide_help">A double volume allowance shall be provided for each gang required for mounting.</div>
 		</td>
 	</tr>
-	<tr class=BFC_devices_desc>
+	<tr class=BFC_largest_device_conductor_row>
 		<td>
 			<select class=BFC id="BFC_largest_device_conductor">
 				<option class=BFC_awg14 value="awg14" selected>#14</option>
@@ -795,6 +793,8 @@ function Init() { //***********************************************************/
 	Sort_Format_STANDARD_BOXES();
 
 	Calculate_Min_Box_Size();
+
+	$TERMS.awg14.focus();
 
 }//end Init() //***************************************************************/
 window.addEventListener("load", function() { Init() } );
