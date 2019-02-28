@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-02-27 1749ET">
+<meta name="updated" content="2019-02-28 0031 ET">
 
 <script id=BFC_LICENSE type="text/template">
 Copyright © 2019-     https://github.com/Self-Evident
@@ -74,7 +74,7 @@ table.BFC        { border-collapse: collapse; border: solid 1px #555; display: i
 h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
 h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
-.BFC_container   { padding: 0; margin: 0 0rem 0 1rem; }
+.BFC_container   { padding: 0; margin: 0 .5rem; }
 .BFC_container * { box-sizing: border-box; font-family: arial; }
 .BFC_conductor_container  { display: inline-block; margin: 0 .5rem .5rem 0; vertical-align: top; max-width: 29rem; }
 .BFC_results_and_reset    { display: inline-block; }
@@ -771,7 +771,11 @@ function Assign_Events() {
 	$SHOW_HELP.onkeyup   = function(e) { Space_or_Enter_on_Button(e, this); }
 	$SHOW_HELP.onclick   = function() {
 		var helps = D.getElementsByClassName(_NS_ + 'help');
-		for (var $section of helps) { $section.classList.toggle(_NS_ + 'hide_help'); }
+		
+		//FF worked by just using "helps" as the object of a for/of loop, as in: for (var $section of helps) {...}.
+		//But Edge, not so much.  I don't know why.  But, what else is new. In anycase, it works in Edge now.
+		var help_sections = Object.values(helps);
+		for (var $section of help_sections) { $section.classList.toggle(_NS_ + 'hide_help'); }
 	}
 
 
