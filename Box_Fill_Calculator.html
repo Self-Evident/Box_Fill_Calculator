@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-02-28 1300 ET">
+<meta name="updated" content="2019-03-01 0150 ET">
 
 <script id=BFC_LICENSE type="text/template">
 Copyright © 2019-     https://github.com/Self-Evident
@@ -123,6 +123,8 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_frac { display: inline-block; margin: 0 .2rem 0 .1rem; }
 
 .BFC_suitable_standard_box { background-color: #FFF; font-weight: bold }
+
+#BFC_reset_inputs { float: right; }
 
 noscript.BFC {
     position: fixed;
@@ -309,7 +311,8 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	Remember, "conductors", by itself, generally means hot & neutral wires only, and not any ground wires (EGC).
 </div>
 
-<button class=BFC id=BFC_show_help type=reset>Show/Hide Expanded Descriptions</button>
+<button class=BFC id=BFC_show_help type=button>Show/Hide Expanded Descriptions</button>
+<button class=BFC id=BFC_reset_inputs type=reset>Reset/Clear Inputs</button>
 </div><!--//conductors & additional-->
 
 
@@ -330,16 +333,13 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	<tr class=BFC_min_required_size><th>Total Allowance /<br>Minimum Required<br>Box Size</th><th id=BFC_Min_Box_Size>ERROR</th></tr>
 </table>
 <br>
-<button class=BFC id=BFC_reset_inputs type=reset>Reset/Clear Inputs</button>
-<br>
+<button class=BFC id=BFC_Show_Boxes type=button value="some">List All Standard Boxes</button>
 </div><!--//end BFC_results_and_reset-->
 
 
 <table class="BFC BFC_usable_boxes">
 	<tr>
-		<th colspan=2>Some Suitable Standard Boxes<br>
-			<label class=BFC_sub_header>(Show All Standard Boxes: <input class=BFC id=BFC_show_all_standard_boxes type=checkbox>)</label>
-		</th>
+		<th colspan=2>Standard Boxes<br></th>
 		<th class=BFC_vol_col>in<sup>3</sup></th>
 	</tr>
 	<tbody id=BFC_box_list><!--//Populated onload--></tbody>
@@ -398,10 +398,9 @@ var $ALLOWANCE_GROUND   = E_('allowance_Ground');
 var $MIN_BOX_SIZE       = E_('Min_Box_Size');
 
 var $RESET_INPUTS   = E_('reset_inputs');
-var $SHOW_ALL_BOXES = E_('show_all_standard_boxes');
 var $SHOW_HELP      = E_('show_help');
-var $BOX_LIST = E_('box_list');
-
+var $BOX_LIST       = E_('box_list');
+var $SHOW_BOXES     = E_('Show_Boxes');
 
 //	Standard Metal Boxes															Maximum Number of Conductors* (arranged by AWG size)
 //																					* Where no volume allowances are required
@@ -579,7 +578,8 @@ function Output_Result($output, allowance, size) {
 
 function List_Standard_Boxes(min_size) {
 
-	var show_all = $SHOW_ALL_BOXES.checked;
+	var show_all = $SHOW_BOXES.value == "all";
+
 	var rows = "";
 	var count = 0;
 
@@ -777,7 +777,12 @@ function Assign_Events() {
 	}
 
 
-	$SHOW_ALL_BOXES.onclick = function() { List_Standard_Boxes(Calculate_Min_Box_Size()); }
+	$SHOW_BOXES.onclick = function() {
+		if (this.value == "some") { this.value = "all";   this.innerHTML = "Only List Suitbable Standard Boxes"; }
+		else                      { this.value = "some";  this.innerHTML = "List All Standard Boxes"; }
+		
+		List_Standard_Boxes(Calculate_Min_Box_Size());
+	}
 
 }//end Assign_Events()
 
