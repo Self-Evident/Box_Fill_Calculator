@@ -5,7 +5,8 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-01 0150 ET">
+<meta name="updated" content="2019-03-01 1356 ET">
+<!--Please note that after an update, I may sometimes forget to update the updated date...-->
 
 <script id=BFC_LICENSE type="text/template">
 Copyright © 2019-     https://github.com/Self-Evident
@@ -339,7 +340,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 
 <table class="BFC BFC_usable_boxes">
 	<tr>
-		<th colspan=2>Standard Boxes<br></th>
+		<th colspan=2 id=BFC_box_list_header>Some Suitable Standard Boxes</th>
 		<th class=BFC_vol_col>in<sup>3</sup></th>
 	</tr>
 	<tbody id=BFC_box_list><!--//Populated onload--></tbody>
@@ -365,7 +366,7 @@ function E_(id) { return document.getElementById(_NS_ + id); }
 
 var _NS_ = "BFC_";	//A "name space" prefix for id's & classes.
 					//The prefix is also used by itself as a class name (with or without the trailing underscore, "_"),
-					//to select all specified tags for styling only (not used by the JS).
+					//to select all specified tags for styling only (not used by JS).
 					//  eg: <style>div.BFC { some styles }</style> <div class=BFC> <div class=BFC> ... etc...
 
 var WIRE_SIZES = ['awg14', 'awg12', 'awg10', 'awg8', 'awg6'];
@@ -383,7 +384,7 @@ for (var size of WIRE_SIZES) {
 	$LOOPS[size]   = E_('loops_'     + size);
 	$ALLOWS[size]  = E_('allowance_' + size);
 }
-var CONDUCTOR_RULES = [$TERMS, $SPLICES, $PASS, $LOOPS]; //But NOT $ALLOWS! $ALLOWS are result fields.
+var CONDUCTOR_RULES = [$TERMS, $SPLICES, $PASS, $LOOPS]; //But NOT $ALLOWS! $ALLOWS are result fields, not inputs.
 
 var $INTERNAL_CLAMP    = E_('internal_clamp');
 var $SUPPORT_FITTINGS  = E_('support_fittings');
@@ -397,10 +398,13 @@ var $ALLOWANCE_DEVICES  = E_('allowance_Devices');
 var $ALLOWANCE_GROUND   = E_('allowance_Ground');
 var $MIN_BOX_SIZE       = E_('Min_Box_Size');
 
+var $BOX_LIST        = E_('box_list');
+var $BOX_LIST_HEADER = E_('box_list_header');
+
 var $RESET_INPUTS   = E_('reset_inputs');
 var $SHOW_HELP      = E_('show_help');
-var $BOX_LIST       = E_('box_list');
 var $SHOW_BOXES     = E_('Show_Boxes');
+
 
 //	Standard Metal Boxes															Maximum Number of Conductors* (arranged by AWG size)
 //																					* Where no volume allowances are required
@@ -690,18 +694,18 @@ function Calculate_Min_Box_Size() {
 
 
 
-function Space_or_Enter_on_Button(e, $btn) {
+function Space_or_Enter_on_Button(e) {
 		//Capture space & enter keys to toggle button style, to simulate mouse-click on <button>s.
 		//That is, similar to the effect of ":active" styles of the mouse click events.
 
 		Normalize_Event(e);
 
 		if (e.type == "keydown") {
-			if (e.key_code == 32 || e.key_code == 13) { $btn.classList.add(_NS_ + 'button_active'); }
+			if (e.key_code == 32 || e.key_code == 13) { e.target.classList.add(_NS_ + 'button_active'); }
 		}
-		
+
 		if (e.type == "keyup") {
-			if (e.key_code == 32 || e.key_code == 13) { $btn.classList.remove(_NS_ + 'button_active'); }
+			if (e.key_code == 32 || e.key_code == 13) { e.target.classList.remove(_NS_ + 'button_active'); }
 		}
 }//end Space_or_Enter_on_Button()
 
@@ -710,7 +714,15 @@ function Space_or_Enter_on_Button(e, $btn) {
 
 function Assign_Events() {
 
-	D.addEventListener("keydown", function(event){Scroll_Blur(event)} );
+	D.addEventListener("keydown", function(e) {
+		Scroll_Blur(e);
+		if (e.target.tagName == "BUTTON") { Space_or_Enter_on_Button(e); }
+	});
+
+	D.addEventListener("keyup", function(e) {
+		if (e.target.tagName == "BUTTON") { Space_or_Enter_on_Button(e); }
+	});
+
 
 	for (var size of WIRE_SIZES) {
 		$TERMS  [size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
@@ -751,8 +763,6 @@ function Assign_Events() {
 	$LARGEST_EGC             .onchange = function(){ Calculate_Min_Box_Size(); Set_Style_per_awg(1, this, this.value); }
 
 
-	$RESET_INPUTS.onkeydown = function(e) { Space_or_Enter_on_Button(e, this); }
-	$RESET_INPUTS.onkeyup   = function(e) { Space_or_Enter_on_Button(e, this); }
 	$RESET_INPUTS.onclick   = function() {
 		for (var rule of CONDUCTOR_RULES) { for (var size in rule) { rule[size].value = ""; } }
 		$INTERNAL_CLAMP.selectedIndex = 0;
@@ -765,8 +775,6 @@ function Assign_Events() {
 	}
 
 
-	$SHOW_HELP.onkeydown = function(e) { Space_or_Enter_on_Button(e, this); }
-	$SHOW_HELP.onkeyup   = function(e) { Space_or_Enter_on_Button(e, this); }
 	$SHOW_HELP.onclick   = function() {
 		var helps = D.getElementsByClassName(_NS_ + 'help');
 		
@@ -778,9 +786,17 @@ function Assign_Events() {
 
 
 	$SHOW_BOXES.onclick = function() {
-		if (this.value == "some") { this.value = "all";   this.innerHTML = "Only List Suitbable Standard Boxes"; }
-		else                      { this.value = "some";  this.innerHTML = "List All Standard Boxes"; }
-		
+		if (this.value == "some") {
+			this.value = "all";
+			this.innerHTML = "Only List Suitbable Standard Boxes";
+			$BOX_LIST_HEADER.innerHTML = "Standard Boxes";
+		}
+		else {
+			this.value = "some";
+			this.innerHTML = "List All Standard Boxes";
+			$BOX_LIST_HEADER.innerHTML = "Some Suitable Standard Boxes";
+		}
+
 		List_Standard_Boxes(Calculate_Min_Box_Size());
 	}
 
