@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-01 1356 ET">
+<meta name="updated" content="2019-03-02 1255 ET">
 <!--Please note that after an update, I may sometimes forget to update the updated date...-->
 
 <script id=BFC_LICENSE type="text/template">
@@ -361,8 +361,8 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 
 <script>(function(){
 var D = document;
-function E(id)  { return document.getElementById(id); }
-function E_(id) { return document.getElementById(_NS_ + id); }
+function E(id)  { return D.getElementById(id); }
+function E_(id) { return D.getElementById(_NS_ + id); }
 
 var _NS_ = "BFC_";	//A "name space" prefix for id's & classes.
 					//The prefix is also used by itself as a class name (with or without the trailing underscore, "_"),
@@ -698,6 +698,8 @@ function Space_or_Enter_on_Button(e) {
 		//Capture space & enter keys to toggle button style, to simulate mouse-click on <button>s.
 		//That is, similar to the effect of ":active" styles of the mouse click events.
 
+		if (e.target.tagName != "BUTTON") { return }
+
 		Normalize_Event(e);
 
 		if (e.type == "keydown") {
@@ -714,14 +716,8 @@ function Space_or_Enter_on_Button(e) {
 
 function Assign_Events() {
 
-	D.addEventListener("keydown", function(e) {
-		Scroll_Blur(e);
-		if (e.target.tagName == "BUTTON") { Space_or_Enter_on_Button(e); }
-	});
-
-	D.addEventListener("keyup", function(e) {
-		if (e.target.tagName == "BUTTON") { Space_or_Enter_on_Button(e); }
-	});
+	D.addEventListener("keydown", function(e) { Space_or_Enter_on_Button(e); Scroll_Blur(e); });
+	D.addEventListener("keyup",   function(e) { Space_or_Enter_on_Button(e); });
 
 
 	for (var size of WIRE_SIZES) {
@@ -770,8 +766,8 @@ function Assign_Events() {
 		$DEVICES.value = "";
 		$LARGEST_DEVICE_CONDUCTOR.selectedIndex = 0;
 		$LARGEST_EGC.selectedIndex = 0;
-		Calculate_Min_Box_Size();
 		Init_States();
+		Calculate_Min_Box_Size();
 	}
 
 
