@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-02 1255 ET">
+<meta name="updated" content="2019-03-04 1750 ET">
 <!--Please note that after an update, I may sometimes forget to update the updated date...-->
 
 <script id=BFC_LICENSE type="text/template">
@@ -103,13 +103,13 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_min_required_size      { background-color: white; }
 #BFC_Min_Box_Size           { color: blue; font-weight: bold; }
 
-.BFC_usable_boxes       { width: 21.5rem; margin: 0 0 .5rem 0; }
-.BFC_usable_boxes td    { text-align: center; }
-.BFC_usable_boxes td    { padding: .3rem .2rem; }
-.BFC_usable_boxes tr td { white-space: pre; }
-.BFC_usable_boxes tr:first-child th { line-height: 1.3rem;  }
-.BFC_usable_boxes td:first-child  { width: 7.8rem; }
-.BFC_usable_boxes th.BFC_vol_col { width: 3.5rem; }
+#BFC_box_list_table       { width: 21.5rem; margin: 0 0 .5rem 0; }
+#BFC_box_list_table td    { text-align: center; }
+#BFC_box_list_table td    { padding: .3rem .2rem; }
+#BFC_box_list_table tr td { white-space: pre; }
+#BFC_box_list_table tr:first-child th { line-height: 1.3rem;  }
+#BFC_box_list_table th:last-child  { width: 7.8rem; }
+#BFC_box_list_table th.BFC_vol_col { width: 3.5rem; }
 
 .BFC_sub_header { font-weight: normal; font-size: 95%; }
 
@@ -333,15 +333,26 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	<tr><td class="result_item">EGC             </td><td id=BFC_allowance_Ground>--</td></tr>
 	<tr class=BFC_min_required_size><th>Total Allowance /<br>Minimum Required<br>Box Size</th><th id=BFC_Min_Box_Size>ERROR</th></tr>
 </table>
+
 <br>
-<button class=BFC id=BFC_Show_Boxes type=button value="some">List All Standard Boxes</button>
+List Standard Boxes:
+<select class=BFC id=BFC_show_boxes>
+	<option value=none>None</option>
+	<option value=some>Some</option>
+	<option value=all>All</option>
+</select>
+
 </div><!--//end BFC_results_and_reset-->
 
 
-<table class="BFC BFC_usable_boxes">
+<table class=BFC id=BFC_box_list_table>
 	<tr>
-		<th colspan=2 id=BFC_box_list_header>Some Suitable Standard Boxes</th>
+		<th colspan=3 id=BFC_box_list_header></th>
+	</tr>
+	<tr>
 		<th class=BFC_vol_col>in<sup>3</sup></th>
+		<th>Type</th>
+		<th>Trade Size</th>
 	</tr>
 	<tbody id=BFC_box_list><!--//Populated onload--></tbody>
 </table>
@@ -398,12 +409,13 @@ var $ALLOWANCE_DEVICES  = E_('allowance_Devices');
 var $ALLOWANCE_GROUND   = E_('allowance_Ground');
 var $MIN_BOX_SIZE       = E_('Min_Box_Size');
 
-var $BOX_LIST        = E_('box_list');
+var $BOX_LIST_TABLE  = E_('box_list_table');
 var $BOX_LIST_HEADER = E_('box_list_header');
+var $BOX_LIST        = E_('box_list');
 
 var $RESET_INPUTS   = E_('reset_inputs');
 var $SHOW_HELP      = E_('show_help');
-var $SHOW_BOXES     = E_('Show_Boxes');
+var $SHOW_BOXES     = E_('show_boxes');
 
 
 //	Standard Metal Boxes															Maximum Number of Conductors* (arranged by AWG size)
@@ -437,6 +449,11 @@ var STANDARD_BOXES = [
 	["min. 44.5 depth", "FS - (1 3/4) ",       "multiple cover/gang", 295,  18.0,   12, 10,  9,  8,  7,   6,  3 ],
 	["min. 60.3 depth", "FD - (2 3/8) ",       "multiple cover/gang", 395,  24.0,   16, 13, 12, 10,  9,   8,  4 ],
 ];
+//A few indexes for STANDARD_BOXES[] 
+var BOX = {};
+	BOX.TRADE = 1; //trade size
+	BOX.TYPE  = 2; //description
+	BOX.SIZE  = 4; //volume
 
 
 
@@ -452,16 +469,19 @@ function Format_Fraction(string, lead, numer, denom) {
 
 function Sort_Format_STANDARD_BOXES() {
 	//Sort boxes by volume (either cm^3 [3],  or in^3 [4]).
-	STANDARD_BOXES.sort(function(a,b) { return a[3] - b[3] }); //Remember, array indexes count from 0...
+	STANDARD_BOXES.sort(function(a,b) { return a[BOX.SIZE] - b[BOX.SIZE] }); //Remember, array indexes count from 0...
 
 	for (var box of STANDARD_BOXES) {
-		box[1] = Format_Fraction(box[1], " ",  "1",  "8");
-		box[1] = Format_Fraction(box[1], " ",  "3",  "8");
-		box[1] = Format_Fraction(box[1], " ",  "7",  "8");
-		box[1] = Format_Fraction(box[1], " ",  "1",  "4");
-		box[1] = Format_Fraction(box[1], " ",  "3",  "4");
-		box[1] = Format_Fraction(box[1], " ",  "1",  "2");
-		box[1] = Format_Fraction(box[1], " ", "11", "16");
+		box[BOX.TRADE] = box[BOX.TRADE].replace("(","");
+		box[BOX.TRADE] = box[BOX.TRADE].replace(")","");
+	
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ",  "1",  "8" );
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ",  "3",  "8" );
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ",  "7",  "8" );
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ",  "1",  "4" );
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ",  "3",  "4" );
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ",  "1",  "2" );
+		box[BOX.TRADE] = Format_Fraction( box[BOX.TRADE], " ", "11", "16" );
 	}
 }//end Sort_Format_STANDARD_BOXES()
 
@@ -582,29 +602,45 @@ function Output_Result($output, allowance, size) {
 
 function List_Standard_Boxes(min_size) {
 
+	if ($SHOW_BOXES.value == "some") {
+		$BOX_LIST_HEADER.innerHTML = "Some Suitable Standard Boxes";
+		$BOX_LIST_TABLE.style.display = "";
+	}
+	else if ($SHOW_BOXES.value == "all") {
+		$BOX_LIST_HEADER.innerHTML = "Standard Boxes";
+		$BOX_LIST_TABLE.style.display = "";
+	}
+	else { 
+		$BOX_LIST_HEADER.innerHTML = "--";
+		$BOX_LIST_TABLE.style.display = "none";
+		return;
+	}
+
+	$BOX_LIST.innerHTML = "";
+
 	var show_all = $SHOW_BOXES.value == "all";
+
+	//Leave headers, but don't show any boxes if min == 0.
+	if ((min_size == 0) && !show_all) { return; }
 
 	var rows = "";
 	var count = 0;
 
-	if (!show_all && (min_size < 1)) { $BOX_LIST.innerHTML = ""; return; }
-
 	for (var box of STANDARD_BOXES) {
-		if (!show_all && ((box[4] < min_size) || (count > 10))) { continue }
+		if (!show_all && ((box[BOX.SIZE] < min_size) || (count > 10))) { continue }
 		count++;
 
-		if (box[4] >= min_size) { var classes = " class=BFC_suitable_standard_box"; }
+		if (box[BOX.SIZE] >= min_size) { var classes = " class=BFC_suitable_standard_box"; }
 		else                    { var classes = ""; }
 		
 		rows += "<tr" + classes + ">";
-		rows += "<td>" + box[1] + "</td>";
-		rows += "<td>" + box[2] + "</td>";
-		rows += "<td>" + box[4] + "</td>";
+		rows += "<td>" + box[BOX.SIZE] + "</td>";
+		rows += "<td>" + box[BOX.TYPE] + "</td>";
+		rows += "<td>" + box[BOX.TRADE] + "</td>";
 		rows += "</tr>\n";
 	}
 
-	if (show_all || min_size > 0) { $BOX_LIST.innerHTML = rows; }
-	else                          { $BOX_LIST.innerHTML = ""; }
+	$BOX_LIST.innerHTML = rows;
 
 }//end List_Standard_Boxes()
 
@@ -781,19 +817,9 @@ function Assign_Events() {
 	}
 
 
-	$SHOW_BOXES.onclick = function() {
-		if (this.value == "some") {
-			this.value = "all";
-			this.innerHTML = "Only List Suitbable Standard Boxes";
-			$BOX_LIST_HEADER.innerHTML = "Standard Boxes";
-		}
-		else {
-			this.value = "some";
-			this.innerHTML = "List All Standard Boxes";
-			$BOX_LIST_HEADER.innerHTML = "Some Suitable Standard Boxes";
-		}
-
-		List_Standard_Boxes(Calculate_Min_Box_Size());
+	$SHOW_BOXES.onchange = function() {
+		Calculate_Min_Box_Size();
+		localStorage.setItem(this.id, this.value);
 	}
 
 }//end Assign_Events()
@@ -808,6 +834,9 @@ function Init() { //***********************************************************/
 	Init_States();
 
 	Sort_Format_STANDARD_BOXES();
+
+	$SHOW_BOXES.value = localStorage.getItem($SHOW_BOXES.id);
+	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "none") { $SHOW_BOXES.value = "some" }
 
 	Calculate_Min_Box_Size();
 
