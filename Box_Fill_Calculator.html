@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-04 1750 ET">
+<meta name="updated" content="2019-03-04 2100 ET ">
 <!--Please note that after an update, I may sometimes forget to update the updated date...-->
 
 <script id=BFC_LICENSE type="text/template">
@@ -75,8 +75,9 @@ table.BFC        { border-collapse: collapse; border: solid 1px #555; display: i
 h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
 h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
-.BFC_container   { padding: 0; margin: 0 .5rem; }
-.BFC_container * { box-sizing: border-box; font-family: arial; }
+#BFC_container   { display: none; } /** Temporary until page loads. **/
+#BFC_container   { padding: 0; margin: 0 .5rem; }
+#BFC_container * { box-sizing: border-box; font-family: arial; }
 .BFC_conductor_container  { display: inline-block; margin: 0 .5rem .5rem 0; vertical-align: top; max-width: 29rem; }
 .BFC_results_and_reset    { display: inline-block; }
 
@@ -168,14 +169,13 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 .wiresize div.BFC_wrap_hack1     { display: inline-block; width: 2.0rem; }
 /***************************************/
 
-.BFC_hide_help { display: none; }
 #BFC_conductor_help { border: solid 1px #555; margin: .5rem 0 .5rem 0; padding: .5rem; }
 </style>
 
 
 
 
-<div class="BFC_container">
+<div id="BFC_container">
 
 <noscript class=BFC>
 	<h2>Javascript is not currently available.</h2>
@@ -194,7 +194,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 <table class="BFC BFC_conductors">
 	<tr><th colspan=5>
 		<b>Number of Conductors Terminating in the Box</b><br>
-		<div class="BFC_help BFC_hide_help">Enter number of conductors that originate outside the box and terminate in the box.</div>
+		<div class=BFC_help>Enter number of conductors that originate outside the box and terminate in the box.</div>
 	</th></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_terms_awg14" maxlength=2></label></td>
@@ -205,7 +205,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	</tr>
 
 	<tr><th colspan="5"><b>Number of Conductors Spliced in the Box</b><br>
-			<div class="BFC_help BFC_hide_help">Enter number of conductors that originate outside the box and are spliced in the box.</div>
+			<div class=BFC_help>Enter number of conductors that originate outside the box and are spliced in the box.</div>
 	</th></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_splices_awg14" maxlength=2></label></td>
@@ -216,7 +216,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	</tr>
 
 	<tr><th colspan="5"><b>Number of Conductors that Pass Thru the Box</b><br>
-			<div class="BFC_help BFC_hide_help">Enter number of conductors that pass through the box without splice or termination.</div>
+			<div class=BFC_help>Enter number of conductors that pass through the box without splice or termination.</div>
 	</th></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_pass_awg14" maxlength=2></label></td>
@@ -227,7 +227,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	</tr>
 
 	<tr><th colspan="5"><b>Number of Conductor Loops with 12" of conductor.</b><br>
-			<div class="BFC_help BFC_hide_help">Number of loops or coils of unbroken conductors that are at least 12" in length.</div>
+			<div class=BFC_help>Number of loops or coils of unbroken conductors that are at least 12" in length.</div>
 	</th></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_loops_awg14" maxlength=2></label></td>
@@ -250,7 +250,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 		</td>
 		<td>
 			Are there any <b>internal cable clamps</b> to the box?<br>
-			<div class="BFC_help BFC_hide_help">Allowance based on largest conductor in the box.</div>
+			<div class=BFC_help>Allowance based on largest conductor in the box.</div>
 		</td>
 	</tr>
 	<tr>
@@ -259,7 +259,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 		</td>
 		<td>
 			Number of <b>Support Fittings</b> present in the box.<br>
-			<div class="BFC_help BFC_hide_help">Luminaire studs or hickeys.<br>
+			<div class=BFC_help>Luminaire studs or hickeys.<br>
 			Allowance based on largest conductor in the box.</div>
 		</td>
 	</tr>
@@ -267,7 +267,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 		<td><input type=text class=BFC id="BFC_devices" maxlength=2></td>
 		<td>
 			Number of <b>Devices</b> (gangs) mounted to the box.
-			<div class="BFC_help BFC_hide_help">A double volume allowance shall be provided for each gang required for mounting.</div>
+			<div class=BFC_help>A double volume allowance shall be provided for each gang required for mounting.</div>
 		</td>
 	</tr>
 	<tr class=BFC_largest_device_conductor_row>
@@ -299,7 +299,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 		</td>
 		<td>
 			<b>Largest EGC</b> (ground wire) that enters the box.
-			<div class="BFC_help BFC_hide_help">
+			<div class=BFC_help>
 				Equipment Grounding Conductors (EGC), or equipment bonding jumpers.
 			</div>
 		</td>
@@ -308,7 +308,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 
 
 
-<div id=BFC_conductor_help class="BFC_help BFC_hide_help">
+<div id=BFC_conductor_help class=BFC_help>
 	Remember, "conductors", by itself, generally means hot & neutral wires only, and not any ground wires (EGC).
 </div>
 
@@ -386,6 +386,7 @@ var WIRE_SIZES = ['awg14', 'awg12', 'awg10', 'awg8', 'awg6'];
 var ALLOWANCES = {"none": 0, 'awg14':2.00, 'awg12':2.25, 'awg10':2.50, 'awg8':3.00, 'awg6':5.00}
 
 
+var $CONTAINER = E_('container');
 
 var $TERMS = {}, $SPLICES = {}, $PASS = {}, $LOOPS = {}, $ALLOWS = {};
 for (var size of WIRE_SIZES) {
@@ -541,6 +542,26 @@ function Normalize_Input($text_input) {
 
 
 
+function Space_or_Enter_on_Button(e) {
+		//Capture space & enter keys to toggle button style, to simulate mouse-click on <button>s.
+		//That is, similar to the effect of ":active" styles of the mouse click events.
+
+		if (e.target.tagName != "BUTTON") { return }
+
+		Normalize_Event(e);
+
+		if (e.type == "keydown") {
+			if (e.key_code == 32 || e.key_code == 13) { e.target.classList.add(_NS_ + 'button_active'); }
+		}
+
+		if (e.type == "keyup") {
+			if (e.key_code == 32 || e.key_code == 13) { e.target.classList.remove(_NS_ + 'button_active'); }
+		}
+}//end Space_or_Enter_on_Button()
+
+
+
+
 function Highlight_Input($rule) {
 	//Highlight any non-zero conductor terms/splices/passthrus/loops.
 	if (Parse_Int($rule.value) > 0) {
@@ -600,6 +621,20 @@ function Output_Result($output, allowance, size) {
 
 
 
+function Show_Hide_Help(show) {
+	//FF worked by just using "helps" as the object of a for/of loop, as in: for (var $section of helps) {...}.
+	//But Edge, not so much.  I don't know why.  But, what else is new. In anycase, it works in Edge now.
+	var helps = D.getElementsByClassName(_NS_ + 'help');
+	var help_sections = Object.values(helps);
+	for (var $section of help_sections) {
+		if (show === "true") { $section.style.display = ""; }
+		else                 { $section.style.display = "none"; }
+	}
+}//end Show_Hide_Help()
+
+
+
+
 function List_Standard_Boxes(min_size) {
 
 	if ($SHOW_BOXES.value == "some") {
@@ -647,7 +682,7 @@ function List_Standard_Boxes(min_size) {
 
 
 
-function Init_States() {
+function Init_Input_States() {
 
 	//Non-zero input values....
 	for (var size of WIRE_SIZES){ for (var rule of CONDUCTOR_RULES) { Highlight_Input(rule[size]); } }
@@ -657,7 +692,7 @@ function Init_States() {
 
 	Set_Style_per_awg(1, $LARGEST_DEVICE_CONDUCTOR, $LARGEST_DEVICE_CONDUCTOR.value);
 	Set_Style_per_awg(1, $LARGEST_EGC, $LARGEST_EGC.value);
-}//end Init_States()
+}//end Init_Input_States()
 
 
 
@@ -730,26 +765,6 @@ function Calculate_Min_Box_Size() {
 
 
 
-function Space_or_Enter_on_Button(e) {
-		//Capture space & enter keys to toggle button style, to simulate mouse-click on <button>s.
-		//That is, similar to the effect of ":active" styles of the mouse click events.
-
-		if (e.target.tagName != "BUTTON") { return }
-
-		Normalize_Event(e);
-
-		if (e.type == "keydown") {
-			if (e.key_code == 32 || e.key_code == 13) { e.target.classList.add(_NS_ + 'button_active'); }
-		}
-
-		if (e.type == "keyup") {
-			if (e.key_code == 32 || e.key_code == 13) { e.target.classList.remove(_NS_ + 'button_active'); }
-		}
-}//end Space_or_Enter_on_Button()
-
-
-
-
 function Assign_Events() {
 
 	D.addEventListener("keydown", function(e) { Space_or_Enter_on_Button(e); Scroll_Blur(e); });
@@ -802,18 +817,15 @@ function Assign_Events() {
 		$DEVICES.value = "";
 		$LARGEST_DEVICE_CONDUCTOR.selectedIndex = 0;
 		$LARGEST_EGC.selectedIndex = 0;
-		Init_States();
+		Init_Input_States();
 		Calculate_Min_Box_Size();
 	}
 
 
 	$SHOW_HELP.onclick   = function() {
-		var helps = D.getElementsByClassName(_NS_ + 'help');
-		
-		//FF worked by just using "helps" as the object of a for/of loop, as in: for (var $section of helps) {...}.
-		//But Edge, not so much.  I don't know why.  But, what else is new. In anycase, it works in Edge now.
-		var help_sections = Object.values(helps);
-		for (var $section of help_sections) { $section.classList.toggle(_NS_ + 'hide_help'); }
+		if ($SHOW_HELP.value === "true") { $SHOW_HELP.value = "false"; } else { $SHOW_HELP.value = "true"; }
+		localStorage.setItem(this.id, this.value);
+		Show_Hide_Help(this.value);
 	}
 
 
@@ -831,17 +843,23 @@ function Init() { //***********************************************************/
 
 	Assign_Events();
 
-	Init_States();
-
 	Sort_Format_STANDARD_BOXES();
+
+	Init_Input_States();
+
+	$SHOW_HELP.value = localStorage.getItem($SHOW_HELP.id);
+	if ($SHOW_HELP.value !== "true") { $SHOW_HELP.value = "false"; }
+	Show_Hide_Help($SHOW_HELP.value);
 
 	$SHOW_BOXES.value = localStorage.getItem($SHOW_BOXES.id);
 	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "none") { $SHOW_BOXES.value = "some" }
 
 	Calculate_Min_Box_Size();
 
-	$TERMS.awg14.focus();
+	$CONTAINER.style.display = "inline-block";
 
+	$TERMS.awg14.focus();
 }//end Init() //***************************************************************/
+
 window.addEventListener("load", function() { Init() } );
 })();</script>
