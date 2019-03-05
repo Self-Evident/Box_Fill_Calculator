@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-04 2100 ET ">
+<meta name="updated" content="2019-03-05 0100 ET">
 <!--Please note that after an update, I may sometimes forget to update the updated date...-->
 
 <script id=BFC_LICENSE type="text/template">
@@ -99,7 +99,7 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_results td:last-of-type { text-align: center; width: 5rem; }
 .BFC_results th              { padding: .6rem .2rem .5rem .2rem; text-align: center; font-size: 1.1rem; }
 .BFC_results_col_hdrs        { font-weight: bold; }
-.BFC_results td.result_item { padding-left: 1.5rem; }
+.BFC_results td.result_item  { padding-left: 1.5rem; }
 
 .BFC_min_required_size      { background-color: white; }
 #BFC_Min_Box_Size           { color: blue; font-weight: bold; }
@@ -108,9 +108,10 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 #BFC_box_list_table td    { text-align: center; }
 #BFC_box_list_table td    { padding: .3rem .2rem; }
 #BFC_box_list_table tr td { white-space: pre; }
-#BFC_box_list_table tr:first-child th { line-height: 1.3rem;  }
-#BFC_box_list_table th:last-child  { width: 7.8rem; }
-#BFC_box_list_table th.BFC_vol_col { width: 3.5rem; }
+#BFC_box_list_table th#BFC_box_list_header { line-height: 1.5rem; }
+#BFC_box_list_table th.BFC_boxlist_vol     { width: 3.7rem; }
+#BFC_box_list_table th.BFC_boxlist_type    { width: 10.5rem; }
+#BFC_box_list_table th.BFC_boxlist_trade   { } /** 21.5 - 3.7 - 10.5 **/
 
 .BFC_sub_header { font-weight: normal; font-size: 95%; }
 
@@ -197,44 +198,44 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 		<div class=BFC_help>Enter number of conductors that originate outside the box and terminate in the box.</div>
 	</th></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_terms_awg14" maxlength=2></label></td>
-		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_terms_awg12" maxlength=2></label></td>
-		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_terms_awg10" maxlength=2></label></td>
-		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_terms_awg8"  maxlength=2></label></td>
-		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_terms_awg6"  maxlength=2></label></td>
+		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_terms_awg14" maxlength=2></td>
+		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_terms_awg12" maxlength=2></td>
+		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_terms_awg10" maxlength=2></td>
+		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_terms_awg8"  maxlength=2></td>
+		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_terms_awg6"  maxlength=2></td>
 	</tr>
 
 	<tr><th colspan="5"><b>Number of Conductors Spliced in the Box</b><br>
 			<div class=BFC_help>Enter number of conductors that originate outside the box and are spliced in the box.</div>
 	</th></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_splices_awg14" maxlength=2></label></td>
-		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_splices_awg12" maxlength=2></label></td>
-		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_splices_awg10" maxlength=2></label></td>
-		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_splices_awg8"  maxlength=2></label></td>
-		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_splices_awg6"  maxlength=2></label></td>
+		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_splices_awg14" maxlength=2></td>
+		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_splices_awg12" maxlength=2></td>
+		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_splices_awg10" maxlength=2></td>
+		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_splices_awg8"  maxlength=2></td>
+		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_splices_awg6"  maxlength=2></td>
 	</tr>
 
 	<tr><th colspan="5"><b>Number of Conductors that Pass Thru the Box</b><br>
 			<div class=BFC_help>Enter number of conductors that pass through the box without splice or termination.</div>
 	</th></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_pass_awg14" maxlength=2></label></td>
-		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_pass_awg12" maxlength=2></label></td>
-		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_pass_awg10" maxlength=2></label></td>
-		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_pass_awg8"  maxlength=2></label></td>
-		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_pass_awg6"  maxlength=2></label></td>
+		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_pass_awg14" maxlength=2></td>
+		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_pass_awg12" maxlength=2></td>
+		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_pass_awg10" maxlength=2></td>
+		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_pass_awg8"  maxlength=2></td>
+		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_pass_awg6"  maxlength=2></td>
 	</tr>
 
 	<tr><th colspan="5"><b>Number of Conductor Loops with 12" of conductor.</b><br>
 			<div class=BFC_help>Number of loops or coils of unbroken conductors that are at least 12" in length.</div>
 	</th></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><label><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_loops_awg14" maxlength=2></label></td>
-		<td class="wiresize BFC_awg12"><label><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_loops_awg12" maxlength=2></label></td>
-		<td class="wiresize BFC_awg10"><label><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_loops_awg10" maxlength=2></label></td>
-		<td class="wiresize BFC_awg8" ><label><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_loops_awg8"  maxlength=2></label></td>
-		<td class="wiresize BFC_awg6" ><label><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_loops_awg6"  maxlength=2></label></td>
+		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id="BFC_loops_awg14" maxlength=2></td>
+		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id="BFC_loops_awg12" maxlength=2></td>
+		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id="BFC_loops_awg10" maxlength=2></td>
+		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8</div><input type=text class=BFC id="BFC_loops_awg8"  maxlength=2></td>
+		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6</div><input type=text class=BFC id="BFC_loops_awg6"  maxlength=2></td>
 	</tr>
 </table>
 
@@ -335,7 +336,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 </table>
 
 <br>
-List Standard Boxes:
+List Standard Metal Boxes:
 <select class=BFC id=BFC_show_boxes>
 	<option value=none>None</option>
 	<option value=some>Some</option>
@@ -350,9 +351,9 @@ List Standard Boxes:
 		<th colspan=3 id=BFC_box_list_header></th>
 	</tr>
 	<tr>
-		<th class=BFC_vol_col>in<sup>3</sup></th>
-		<th>Type</th>
-		<th>Trade Size</th>
+		<th class=BFC_boxlist_vol>in<sup>3</sup></th>
+		<th class=BFC_boxlist_type>Type</th>
+		<th class=BFC_boxlist_trade>Trade Size</th>
 	</tr>
 	<tbody id=BFC_box_list><!--//Populated onload--></tbody>
 </table>
@@ -638,11 +639,11 @@ function Show_Hide_Help(show) {
 function List_Standard_Boxes(min_size) {
 
 	if ($SHOW_BOXES.value == "some") {
-		$BOX_LIST_HEADER.innerHTML = "Some Suitable Standard Boxes";
+		$BOX_LIST_HEADER.innerHTML = "Some Suitable Standard Metal Boxes";
 		$BOX_LIST_TABLE.style.display = "";
 	}
 	else if ($SHOW_BOXES.value == "all") {
-		$BOX_LIST_HEADER.innerHTML = "Standard Boxes";
+		$BOX_LIST_HEADER.innerHTML = "Standard Metal Boxes";
 		$BOX_LIST_TABLE.style.display = "";
 	}
 	else { 
