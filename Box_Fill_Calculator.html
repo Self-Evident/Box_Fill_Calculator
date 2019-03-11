@@ -5,7 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-10 1835 ET">
+<meta name="updated" content="2019-03-11 0045 ET">
 
 
 
@@ -400,7 +400,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 				<input type=text class="BFC BFC_allowances" id=BFC_per_clamp disabled> x 1
 			</div>
 		</td>
-		<td id=BFC_allowance_Clamp>--</td>
+		<td id=BFC_allowance_Clamps>--</td>
 	</tr>
 	<tr><td class=BFC_result_item id=BFC_results_fittings>Support Fittings
 			<div class=BFC_allowance_math>
@@ -510,7 +510,7 @@ var $RESULTS_FITTINGS = E_('results_fittings');
 var $RESULTS_DEVICES  = E_('results_devices');
 var $RESULTS_EGC      = E_('results_EGC');
 
-var $ALLOWANCE_CLAMP    = E_('allowance_Clamp');
+var $ALLOWANCE_CLAMPS    = E_('allowance_Clamps');
 var $ALLOWANCE_FITTINGS = E_('allowance_Fittings');
 var $ALLOWANCE_DEVICES  = E_('allowance_Devices');
 var $ALLOWANCE_GROUND   = E_('allowance_Ground');
@@ -646,7 +646,7 @@ function Parse_Int(value) {
 
 
 function Normalize_Input($text_input) {
-	var value = Parse_Int($text_input.value);
+	var value = parseFloat($text_input.value);
 	if (value > 0) { $text_input.value = value; }
 	else           { $text_input.value = ""; value = 0; }
 	return value;
@@ -854,6 +854,17 @@ function Calc_Conductor_Allowances() {
 
 
 
+function Calc_Allowance(size, allowance, $per, $allowance_output, $results, $cnt, $what) {
+	if ($per) { $per.value = allowance; }    //for $SHOW_MATH
+	if ($per) { Normalize_Input($per); }     //for $SHOW_MATH
+	if ($cnt) { $cnt.value = $what.value; }  //for $SHOW_MATH
+	Output_Result($allowance_output, allowance, size, $results);
+	return allowance;
+}//end Calc_Allowance()
+
+
+
+
 function Calculate_Min_Box_Size() {
 
 	var largest_conductor_in_box    = Largest_Conductor_in_Box();
@@ -863,36 +874,26 @@ function Calculate_Min_Box_Size() {
 	var total_allowances =  Calc_Conductor_Allowances();
 
 	//Internal cable clamp
+	var size = largest_conductor_in_box;
 	var allowance = ($INTERNAL_CLAMP.value * allowance_largest_conductor);
-	total_allowances += allowance;
-	$PER_CLAMP.value = allowance; //for $SHOW_MATH
-	if ($PER_CLAMP.value == "0") { Normalize_Input($PER_CLAMP); } //for $SHOW_MATH
-	Output_Result($ALLOWANCE_CLAMP, allowance, largest_conductor_in_box, $RESULTS_CLAMPS);
+	total_allowances += Calc_Allowance(size, allowance, $PER_CLAMP, $ALLOWANCE_CLAMPS, $RESULTS_CLAMPS);
 
 	//Support Fittings
+	var size = largest_conductor_in_box;
 	var allowance = Normalize_Input($SUPPORT_FITTINGS) * allowance_largest_conductor;
-	total_allowances += allowance 
-	$PER_FITTING.value = allowance_largest_conductor; //for $SHOW_MATH
-	if ($PER_FITTING.value == "0") { Normalize_Input($PER_FITTING); } //for $SHOW_MATH
-	$FITTINGS_CNT.value = $SUPPORT_FITTINGS.value;    //for $SHOW_MATH
-	Output_Result($ALLOWANCE_FITTINGS, allowance, largest_conductor_in_box, $RESULTS_FITTINGS);
-	
+	total_allowances += 
+		Calc_Allowance(size, allowance, $PER_FITTING, $ALLOWANCE_FITTINGS, $RESULTS_FITTINGS, $FITTINGS_CNT, $SUPPORT_FITTINGS);
+
 	//Devices mounted to box:      "a double volume allowance ..."
 	var size = $LARGEST_DEVICE_CONDUCTOR.value;
 	var allowance = Normalize_Input($DEVICES) * 2 * ALLOWANCES[size];
-	total_allowances += allowance;
-	$PER_DEVICE.value  = ALLOWANCES[size]; //for $SHOW_MATH
-	$DEVICES_CNT.value = $DEVICES.value; //for $SHOW_MATH
-	Output_Result($ALLOWANCE_DEVICES, allowance, size, $RESULTS_DEVICES);
+	total_allowances += 
+		Calc_Allowance(size, allowance, $PER_DEVICE, $ALLOWANCE_DEVICES, $RESULTS_DEVICES, $DEVICES_CNT, $DEVICES);
 
 	//EGC
 	var size = $LARGEST_EGC.value;
 	var allowance = ALLOWANCES[size];
-	total_allowances += allowance;
-	$PER_EGC.value = ALLOWANCES[size]; //for $SHOW_MATH
-	if ($PER_EGC.value == "0") { Normalize_Input($PER_EGC); }  //for $SHOW_MATH
-	Output_Result($ALLOWANCE_GROUND, allowance, size, $RESULTS_EGC);
-
+	total_allowances += Calc_Allowance(size, allowance, $PER_EGC, $ALLOWANCE_GROUND, $RESULTS_EGC);
 
 	Set_Style_per_awg($INTERNAL_CLAMP,   largest_conductor_in_box,        $INTERNAL_CLAMP.value);
 	Set_Style_per_awg($SUPPORT_FITTINGS, largest_conductor_in_box,        $SUPPORT_FITTINGS.value);
@@ -922,9 +923,9 @@ function Assign_Events() {
 	}
 
 
-	$INTERNAL_CLAMP.onchange = function(){ Calculate_Min_Box_Size(); 	}
+	$INTERNAL_CLAMP.onchange = function(){ Calculate_Min_Box_Size(); }
 
-	$SUPPORT_FITTINGS .oninput = function(){ Normalize_Input(this); Calculate_Min_Box_Size(); }
+	$SUPPORT_FITTINGS.oninput = function(){ Calculate_Min_Box_Size(); }
 
 
 	$DEVICES.onkeydown =  function(e){
