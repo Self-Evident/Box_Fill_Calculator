@@ -5,8 +5,7 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-11 0045 ET">
-
+<meta name="updated" content="2019-03-12 0200 ET">
 
 
 
@@ -44,6 +43,7 @@ input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 2pt 1pt #0
 
 input.BFC, select.BFC { font-size: 1rem; font-family: arial; text-align: center; border-radius: 4px; border: solid 1px #888; }
 input[type=text].BFC  { width: 3rem; padding: 1px 0; font-weight: bold }
+input[type=text].BFC:disabled { color: #444 }
 
 select.BFC        { padding: 3px 0rem 1px 0rem; width: 4.5rem; }
 select.BFC option { font-size: 1em; }
@@ -646,6 +646,7 @@ function Parse_Int(value) {
 
 
 function Normalize_Input($text_input) {
+	//Mostly to blank inputs that are 0
 	var value = parseFloat($text_input.value);
 	if (value > 0) { $text_input.value = value; }
 	else           { $text_input.value = ""; value = 0; }
@@ -830,8 +831,8 @@ function Calc_Conductor_Allowances() {
 	var conductor_allowances_total = 0;
 
 	//12" $LOOPS are counted twice...
-	var conductor_rules = CONDUCTOR_RULES.slice();
-	conductor_rules.push($LOOPS);
+	var conductor_rules = CONDUCTOR_RULES.slice(); //Clone rules.
+	conductor_rules.push($LOOPS);                  //Add 2nd copy of $LOOPS so counted a seconds time.
 
 	for (var size of WIRE_SIZES) {
 		var allowance_count = 0;
@@ -854,13 +855,16 @@ function Calc_Conductor_Allowances() {
 
 
 
-function Calc_Allowance(size, allowance, $per, $allowance_output, $results, $cnt, $what) {
-	if ($per) { $per.value = allowance; }    //for $SHOW_MATH
-	if ($per) { Normalize_Input($per); }     //for $SHOW_MATH
-	if ($cnt) { $cnt.value = $what.value; }  //for $SHOW_MATH
+function Show_Math_and_Output_Results(size, allowance, $per, allow_per, $allowance_output, $results, $cnt, $what) {
+	//Update $SHOW_MATH values, Output_Result().
+	if ($per) {                  
+		$per.value = allow_per;
+		Normalize_Input($per)
+		if (allow_per > 0) { $per.value = Normalize_Input($per).toFixed(2); }
+	}
+	if ($cnt) { $cnt.value = $what.value; }
 	Output_Result($allowance_output, allowance, size, $results);
-	return allowance;
-}//end Calc_Allowance()
+}//end Show_Math_and_Output_Results()
 
 
 
@@ -873,27 +877,30 @@ function Calculate_Min_Box_Size() {
 	//Conductors
 	var total_allowances =  Calc_Conductor_Allowances();
 
-	//Internal cable clamp
+	//Internal cable clamps
 	var size = largest_conductor_in_box;
 	var allowance = ($INTERNAL_CLAMP.value * allowance_largest_conductor);
-	total_allowances += Calc_Allowance(size, allowance, $PER_CLAMP, $ALLOWANCE_CLAMPS, $RESULTS_CLAMPS);
+	total_allowances += allowance;
+	Show_Math_and_Output_Results(size, allowance, $PER_CLAMP, allowance, $ALLOWANCE_CLAMPS, $RESULTS_CLAMPS);
 
 	//Support Fittings
 	var size = largest_conductor_in_box;
 	var allowance = Normalize_Input($SUPPORT_FITTINGS) * allowance_largest_conductor;
-	total_allowances += 
-		Calc_Allowance(size, allowance, $PER_FITTING, $ALLOWANCE_FITTINGS, $RESULTS_FITTINGS, $FITTINGS_CNT, $SUPPORT_FITTINGS);
+	total_allowances += allowance;
+	Show_Math_and_Output_Results(size, allowance, $PER_FITTING, ALLOWANCES[size], $ALLOWANCE_FITTINGS, $RESULTS_FITTINGS, $FITTINGS_CNT, $SUPPORT_FITTINGS);
 
 	//Devices mounted to box:      "a double volume allowance ..."
 	var size = $LARGEST_DEVICE_CONDUCTOR.value;
-	var allowance = Normalize_Input($DEVICES) * 2 * ALLOWANCES[size];
-	total_allowances += 
-		Calc_Allowance(size, allowance, $PER_DEVICE, $ALLOWANCE_DEVICES, $RESULTS_DEVICES, $DEVICES_CNT, $DEVICES);
+	var allowance = ALLOWANCES[size] * Normalize_Input($DEVICES) * 2;
+	total_allowances += allowance;
+	Show_Math_and_Output_Results(size, allowance, $PER_DEVICE, ALLOWANCES[size], $ALLOWANCE_DEVICES, $RESULTS_DEVICES, $DEVICES_CNT, $DEVICES);
 
 	//EGC
 	var size = $LARGEST_EGC.value;
 	var allowance = ALLOWANCES[size];
-	total_allowances += Calc_Allowance(size, allowance, $PER_EGC, $ALLOWANCE_GROUND, $RESULTS_EGC);
+	total_allowances += allowance;
+	Show_Math_and_Output_Results(size, allowance, $PER_EGC, allowance, $ALLOWANCE_GROUND, $RESULTS_EGC);
+
 
 	Set_Style_per_awg($INTERNAL_CLAMP,   largest_conductor_in_box,        $INTERNAL_CLAMP.value);
 	Set_Style_per_awg($SUPPORT_FITTINGS, largest_conductor_in_box,        $SUPPORT_FITTINGS.value);
@@ -1005,7 +1012,7 @@ function Init() { //***********************************************************/
 	Init_Show_Hides($SHOW_HELP, $SHOW_HIDE_EX, 'help', 'Show', 'Hide');
 
 	//Populate per conductor allowances for results math.
-	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size]; }
+	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size].toFixed(2); }
 
 	$SHOW_BOXES.value = localStorage.getItem($SHOW_BOXES.id);
 	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "none") { $SHOW_BOXES.value = "some" }
