@@ -5,7 +5,8 @@
 
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-12 0200 ET">
+<meta name="updated" content="2019-03-13 1644 ET">
+
 
 
 
@@ -108,6 +109,7 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 #BFC_results td:last-of-type { text-align: center; width: 5rem; }
 #BFC_results td.BFC_result_item  { padding-left: 1rem; }
 #BFC_results .BFC_allowances { width: 2.5rem; font-weight: normal; }
+#BFC_results .BFC_plain     { background-color: transparent; border-color: transparent; color: inherit; }
 .BFC_results_col_hdrs       { font-weight: bold; }
 .BFC_min_required_size      { background-color: white; }
 #BFC_Min_Box_Size           { color: blue; font-weight: bold; }
@@ -116,14 +118,13 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 #BFC_results div.BFC_allowance_math  {
 	float: right;
-	margin: -.15rem 0 -.3rem 1rem;
-	width: 7.8rem;
-	border: solid 1px red;
+	margin: -.15rem .5rem -.3rem 2rem;
 	border-top: 0;
 	border-bottom: 0;
 	border-left: 0;
 	border-right: 0;
 	display: inline-block;
+	text-align: right;
 }
 
 
@@ -256,7 +257,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_pass_awg6  maxlength=2></td>
 	</tr>
 
-	<tr><td colspan=5><h4 class=BFC>Number of Conductor Loops with 12" of conductor.</h4>
+	<tr><td colspan=5><h4 class=BFC>Number of Loops or Coils with 12" of conductor.</h4>
 			<div class=BFC_help>Enter the number of loops or coils of unbroken conductors that are at least 12" in length. Each loop will be counted twice in the calculations.</div>
 	</td></tr>
 	<tr>
@@ -397,7 +398,8 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 	<tr><td class=BFC_result_item id=BFC_results_clamps>Cable Clamps
 			<div class=BFC_allowance_math>
-				<input type=text class="BFC BFC_allowances" id=BFC_per_clamp disabled> x 1
+				<input type=text class="BFC BFC_allowances" id=BFC_per_clamp disabled> x 
+				<input type=text class="BFC BFC_allowances BFC_plain" id=BFC_clamps_cnt disabled value=1>
 			</div>
 		</td>
 		<td id=BFC_allowance_Clamps>--</td>
@@ -411,16 +413,17 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		<td id=BFC_allowance_Fittings>--</td>
 	</tr>
 	<tr><td class=BFC_result_item id=BFC_results_devices>Devices
-			<div class=BFC_allowance_math>
+			<div class=BFC_allowance_math> 2 x
 				<input type=text class="BFC BFC_allowances" id=BFC_per_device disabled> x 
-				<input type=text class="BFC BFC_allowances" id=BFC_devices_cnt disabled> x 2
+				<input type=text class="BFC BFC_allowances" id=BFC_devices_cnt disabled>
 			</div>
 		</td>
 		<td id=BFC_allowance_Devices>--</td>
 	</tr>
 	<tr><td class=BFC_result_item id=BFC_results_EGC>EGC
 			<div class=BFC_allowance_math>
-				<input type=text class="BFC BFC_allowances" id=BFC_per_egc disabled> x 1
+				<input type=text class="BFC BFC_allowances" id=BFC_per_egc disabled> x
+				<input type=text class="BFC BFC_allowances BFC_plain" id=BFC_egc_cnt disabled value=1>
 			</div>
 		</td>
 		<td id=BFC_allowance_Ground>--</td>
