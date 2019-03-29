@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en-us">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>The Box Fill Calculator</title>
 
-<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="updated" content="2019-03-13 1644 ET">
-
+<meta name="updated" content="2019-03-29 1420 ET">
 
 
 
 <script id=BFC_LICENSE type="text/template">
-Copyright � 2019-     https://github.com/Self-Evident
+Copyright © 2019   https://github.com/Self-Evident
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -166,6 +165,15 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 
 .BFC_disclaimer { border: solid 1px #555; padding: 1rem; margin: .5rem 0; }
 
+#BFC_license_onscreen {
+	font-family: courier;
+	font-size: 1.1rem;
+	white-space: pre-wrap;
+	border: solid 1px #555;
+	display: inline-block;
+	padding: 1rem;
+}
+
 
 /**************************************./
 * Desired behavior of Conductors table: Depending on browswer width,
@@ -258,7 +266,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	</tr>
 
 	<tr><td colspan=5><h4 class=BFC>Number of Loops or Coils with 12" of conductor.</h4>
-			<div class=BFC_help>Enter the number of loops or coils of unbroken conductors that are at least 12" in length. Each loop will be counted twice in the calculations.</div>
+			<div class=BFC_help>Enter the number of loops or coils of unbroken conductors that are at least 12" in length. Each 12" loop or coil will be counted twice in the calculations.</div>
 	</td></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_loops_awg14 maxlength=2></td>
@@ -455,11 +463,16 @@ List Standard Metal Boxes:
 </table>
 
 
-
 <h3 class="BFC_disclaimer">
 	No guarantees are made as to the accuracy of calculations or compliance with
 	local codes.&nbsp; Verify all calculations with a professional, licensed, electrician.
 </h3>
+
+
+<p class=BFC>
+Copyright © 2019  https://github.com/Self-Evident</p>
+<button type=button class=BFC id=BFC_show_license>Show License</button><br>
+<pre class=BFC_copyright_container id="BFC_license_onscreen"></pre>
 
 </div><!--/container-->
 
@@ -534,6 +547,12 @@ var $RESET_INPUTS = E_('reset_inputs');
 var $SHOW_HELP    = E_('show_help');
 var $SHOW_HIDE_EX = E_('show_hide_ex');
 var $SHOW_BOXES   = E_('show_boxes');
+
+var $LICENSE          = E_('LICENSE');
+var $SHOW_LICENSE     = E_('show_license');
+var $LICENSE_ONSCREEN = E_('license_onscreen');
+
+
 
 
 //	Standard Metal Boxes															Maximum Number of Conductors* (arranged by AWG size)
@@ -691,7 +710,7 @@ function Highlight_Input($rule) {
 
 
 function Set_Style_per_awg($what, new_size, allowance) {
-	//Pass 1 for allowance if setting style regardless. Or irregardless.
+	//Pass 1 for allowance if setting style irregardless, regardless of whether or not you think it's a word...
 
 	//Remove any existing size styles...
 	for (var old_size in ALLOWANCES) { $what.classList.remove(_NS_ + old_size); }
@@ -743,15 +762,25 @@ function Output_Result($output, allowance, size, $result_desc) {
 
 
 
-function Show_Hide_Class(class_name, show) {
+function Show_Hide_Class(class_name, $show_btn, $text, show_text, hide_text, init) {
 	//class_name without any _NS_ prefix.
-	//show is "none" (to hide) or "" (to show). Or some other valid display style.
 	//FF worked by just using "helps" as the object of a for/of loop, as in: for (var $section of helps) {...}.
 	//But Edge, not so much.  I don't know why.  But, what else is new. In anycase, it works in Edge now.
 	var helps = D.getElementsByClassName(_NS_ + class_name);
 	var help_sections = Object.values(helps);
 
-	for (var $section of help_sections) { $section.style.display = show; }
+	if (init === "init") {
+		$show_btn.value = localStorage.getItem($show_btn.id);
+		//"pre-toggle" now, since we want to preserve saved state (from localStorage).
+		if ($show_btn.value === '') { $show_btn.value = "none"; } else  { $show_btn.value = ""; }
+	}
+
+	if ($show_btn.value === "") { $show_btn.value = "none"; $text.innerHTML = show_text; }
+	else                        { $show_btn.value = ""    ; $text.innerHTML = hide_text; }
+
+	if (init !== "init") { localStorage.setItem($show_btn.id, $show_btn.value); }
+
+	for (var $section of help_sections) { $section.style.display = $show_btn.value; }
 }//end Show_Hide_Class()
 
 
@@ -820,22 +849,12 @@ function Init_Input_States() {
 
 
 
-function Init_Show_Hides($show_what, $text, class_name, show, hide ) {
-	$show_what.value = localStorage.getItem($show_what.id);
-	if ($show_what.value === '') { $text.innerHTML = hide; }
-	else                         { $text.innerHTML = show; $show_what.value = "none"; }
-	Show_Hide_Class(class_name, $show_what.value);
-}//end Init_Show_Hides()
-
-
-
-
 function Calc_Conductor_Allowances() {
 	var conductor_allowances_total = 0;
 
 	//12" $LOOPS are counted twice...
 	var conductor_rules = CONDUCTOR_RULES.slice(); //Clone rules.
-	conductor_rules.push($LOOPS);                  //Add 2nd copy of $LOOPS so counted a seconds time.
+	conductor_rules.push($LOOPS);                  //Add 2nd copy of $LOOPS so counted a second time.
 
 	for (var size of WIRE_SIZES) {
 		var allowance_count = 0;
@@ -976,19 +995,12 @@ function Assign_Events() {
 	}
 
 
-	$SHOW_HELP.onclick   = function() {
-		if (this.value === "") { this.value = "none"; $SHOW_HIDE_EX.innerHTML = "Show"; }
-		else                   { this.value = "";     $SHOW_HIDE_EX.innerHTML = "Hide"; }
-		localStorage.setItem(this.id, this.value);
-		Show_Hide_Class('help', this.value);
-	}
+	$SHOW_HELP.onclick = function() { Show_Hide_Class('help', this, $SHOW_HIDE_EX, "Show", "Hide"); }
+	$SHOW_MATH.onclick = function() { Show_Hide_Class('allowance_math', this, this, "+", "&ndash;"); }
 
-
-	$SHOW_MATH.onclick = function() {
-		if (this.value === '') { this.value = "none"; $SHOW_MATH.innerHTML = "+"; }
-		else                   { this.value = ""    ; $SHOW_MATH.innerHTML = "&ndash;"; }
-		localStorage.setItem(this.id, this.value);
-		Show_Hide_Class('allowance_math', this.value);
+	$SHOW_LICENSE.onclick = function() {
+		Show_Hide_Class('copyright_container', this, this, "Show License", "Hide License"); 
+		$LICENSE_ONSCREEN.scrollIntoView();
 	}
 
 
@@ -1010,9 +1022,12 @@ function Init() { //***********************************************************/
 
 	Init_Input_States();
 
-	Init_Show_Hides($SHOW_MATH, $SHOW_MATH, 'allowance_math', '+', '&ndash;');
+	Show_Hide_Class('allowance_math', $SHOW_MATH, $SHOW_MATH, '+', '&ndash;', 'init')
 
-	Init_Show_Hides($SHOW_HELP, $SHOW_HIDE_EX, 'help', 'Show', 'Hide');
+	Show_Hide_Class('help', $SHOW_HELP, $SHOW_HIDE_EX, 'Show', 'Hide', 'init')
+
+	$LICENSE_ONSCREEN.innerHTML = $LICENSE.innerHTML.trim();
+	Show_Hide_Class('copyright_container', $SHOW_LICENSE, $SHOW_LICENSE, 'Show License', 'Hide License', 'init')
 
 	//Populate per conductor allowances for results math.
 	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size].toFixed(2); }
