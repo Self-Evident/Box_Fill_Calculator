@@ -5,11 +5,11 @@
 
 <title>The Box Fill Calculator</title>
 
-<meta name="updated" content="2019-03-29 1420 ET">
+<meta name="updated" content="2020-02-22 0220 ET">
 
 
 
-<script id=BFC_LICENSE type="text/template">
+<template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -29,7 +29,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-</script>
+</template>
 
 
 
@@ -67,17 +67,18 @@ button.BFC {
 	padding: 5px; margin: 0 0 0 0; 
 	height: 1.8rem;
 }
+button.BFC2 { width: 1.35rem; height: 1.25rem; line-height: .4rem; position: absolute; right: .5rem; bottom: .5rem; }
 button.BFC:hover  { background-color: #FFF; }
-button.BFC:active { border: solid 3px #888; }  /* Must come after :hover. For mouse down events. */
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
 
-.BFC.BFC_button_active { border: solid 3px #888; } /* For spacebar & enter keydown/up events. */
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
 
 .BFC:focus             { outline:none; }
 .BFC::-moz-focus-inner { border:0; }
 
 table.BFC        { border-collapse: collapse; border: solid 1px #555; display: inline-table; vertical-align: top; }
 .BFC td, .BFC th { padding: .3rem; border: solid 1px #555; }
-.BFC th          { padding: .5rem .3rem; font-size: 1.2rem; } 
+.BFC th          { padding: .4rem .3rem; font-size: 1.2rem; } 
 
 h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
 h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
@@ -88,17 +89,18 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_conductor_container  { display: inline-block; margin: 0 .5rem .5rem 0; vertical-align: top; max-width: 29rem; }
 .BFC_results_and_reset    { display: inline-block; }
 
-.BFC_conductors { margin: 0 0 0 0; width: 100%; }
-.BFC_conductors th   { padding: .5rem .2rem .2rem .2rem; }
-.BFC_conductors td   { width: 20% } /* See comments & styles at end of sytle sheet. */
+.BFC_conductors    { margin: 0 0 0 0; width: 100%; }
+.BFC_conductors td { width: 20% } /* See comments & styles at end of sytle sheet. */
 .BFC_conductors td.wiresize { text-align: center; }
 
 #BFC_conductor_help { display: inline-block; border-top: dotted 1px #555; margin-top: .3rem; padding: .3rem 0; font-weight: normal; font-size: .9rem}
 
-.BFC_additional { width: 100%; margin: 1rem 0 .5rem 0; }
+.BFC_additional    { width: 100%; margin: 1rem 0 .5rem 0; }
 .BFC_additional tr td:last-child { text-align: center; width: 6rem; }
 .BFC_additional tr.BFC_devices_input_row td { border-bottom: dotted 1px #777; }
 .BFC_additional tr.BFC_largest_device_conductor_row  td { border-top: 0; }
+
+.BFC_fill_info th { position: relative; }
 
 #BFC_devices { margin: 0 0 0 0; }
 
@@ -188,7 +190,7 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 *                 |--------+--------+--------+--------+--------|
 *
 * Without the styles below this comment, depending on browser width and
-* if .BFC_help's are set to {display:none}, the cells of the conductors table 
+* if .BFC_help_con_fill's are set to {display:none}, the cells of the conductors table 
 * may not all wrap at once.
 *       +----------------------------------------------------------------+
 * eg:   | #14 [    ] | #12 [    ] | #10 [    ] |  #8 [    ] |     #6     |
@@ -222,18 +224,20 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 <div class=BFC_conductor_container>
 
-<table class="BFC BFC_conductors">
+<table class="BFC BFC_conductors BFC_fill_info">
 
-	<tr class=BFC_help><th colspan=5>
+	<tr><th colspan=5>
 		Conductor Fill Information
-		<div class=BFC_help id=BFC_conductor_help>
-			Hot & neutral wires only, not ground wires (EGC).
+		<button type=button class="BFC BFC2" id=BFC_show_help_con_fill value="none">+</button>
+		<div class=BFC_help_con_fill id=BFC_conductor_help>
+			<b>Hot & neutral wires only.</b><br>
+			For ground wires (EGC), see Additional Fill Information below.
 		</div>
 	</th></tr>
 
 	<tr><td colspan=5>
-		<h4 class=BFC>Number of Conductors Terminating in the Box</h4>
-		<div class=BFC_help>Enter number of conductors that originate outside the box and terminate in the box.</div>
+			<h4 class=BFC>Number of Conductors Terminating in the Box</h4>
+			<div class=BFC_help_con_fill>Enter number of conductors that originate outside the box and terminate in the box.</div>
 	</td></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_terms_awg14 maxlength=2></td>
@@ -243,8 +247,9 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_terms_awg6  maxlength=2></td>
 	</tr>
 
-	<tr><td colspan=5><h4 class=BFC>Number of Conductors Spliced in the Box</h4>
-			<div class=BFC_help>Enter number of conductors that originate outside the box and are spliced in the box.</div>
+	<tr><td colspan=5>
+			<h4 class=BFC>Number of Conductors Spliced in the Box</h4>
+			<div class=BFC_help_con_fill>Enter number of conductors that originate outside the box and are spliced in the box.</div>
 	</td></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_splices_awg14 maxlength=2></td>
@@ -254,8 +259,9 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_splices_awg6  maxlength=2></td>
 	</tr>
 
-	<tr><td colspan=5><h4 class=BFC>Number of Conductors that Pass Thru the Box</h4>
-			<div class=BFC_help>Enter number of conductors that pass through the box without splice or termination.</div>
+	<tr><td colspan=5>
+			<h4 class=BFC>Number of Conductors that Pass Thru the Box</h4>
+			<div class=BFC_help_con_fill>Enter number of conductors that pass through the box without splice or termination.</div>
 	</td></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_pass_awg14 maxlength=2></td>
@@ -265,8 +271,9 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_pass_awg6  maxlength=2></td>
 	</tr>
 
-	<tr><td colspan=5><h4 class=BFC>Number of Loops or Coils with 12" of conductor.</h4>
-			<div class=BFC_help>Enter the number of loops or coils of unbroken conductors that are at least 12" in length. Each 12" loop or coil will be counted twice in the calculations.</div>
+	<tr><td colspan=5>
+			<h4 class=BFC>Number of Loops or Coils with 12" of conductor.</h4>
+			<div class=BFC_help_con_fill>Enter the number of loops or coils of unbroken conductors that are at least 12" in length. Each 12" loop or coil will be counted twice in the calculations.</div>
 	</td></tr>
 	<tr>
 		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_loops_awg14 maxlength=2></td>
@@ -277,13 +284,22 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	</tr>
 </table>
 
+
+
+
+
 <br>
-<table class="BFC BFC_additional">
-	<tr class=BFC_help><th colspan="2">Additional Fill Information</th></tr>
+<table class="BFC BFC_additional BFC_fill_info">
+	<tr>
+		<th colspan="2">
+			Additional Fill Information 
+			<button class="BFC BFC2" id=BFC_show_help_add_fill type=button>+</button>
+		</th>
+	</tr>
 	<tr>
 		<td>
 			Are there any <b>Internal Cable Clamps</b> in the box?<br>
-			<div class=BFC_help>A single volume allowance based on largest conductor in the box.</div>
+			<div class=BFC_help_add_fill>A single volume allowance based on largest conductor in the box.</div>
 		</td>
 		<td class=BFC_additional_inputs>
 			<select class=BFC id=BFC_internal_clamp>
@@ -296,7 +312,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	<tr>
 		<td>
 			Number of <b>Support Fittings</b> types in the box.<br>
-			<div class=BFC_help>Luminaire studs or hickeys.<br>
+			<div class=BFC_help_add_fill>Luminaire studs or hickeys.<br>
 			A single volume allowance for each type of fitting based on largest conductor in the box.</div>
 		</td>
 		<td>
@@ -307,14 +323,18 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	<tr class=BFC_devices_input_row>
 		<td>
 			Number of <b>Devices</b> (gangs) mounted to the box.
-			<div class=BFC_help>A double volume allowance is calculated for each gang required for mounting.</div>
+			<div class=BFC_help_add_fill>A double volume allowance is calculated for each gang required for mounting.</div>
 		</td>
 		<td><input type=text class=BFC id=BFC_devices maxlength=2></td>
 	</tr>
 
 	<tr class=BFC_largest_device_conductor_row>
 		<td>
-			<b>Largest Conductor</b> connected to the Devices.
+			<b>Largest Conductor</b> connected to a Device.
+			<div class=BFC_help_add_fill>Size of the largest hot or neutral wire connected to a device in the box.  Ignore ground wires (EGC). </div>
+
+
+
 		</td>
 		<td>
 			<select class=BFC id=BFC_largest_device_conductor>
@@ -330,7 +350,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	<tr>
 		<td>
 			<b>Largest EGC</b> (ground wire) that enters the box.
-			<div class=BFC_help>
+			<div class=BFC_help_add_fill>
 				Equipment Grounding Conductors (EGC), or equipment bonding jumpers.
 			</div>
 		</td>
@@ -350,7 +370,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 </table><!--//BFC_additional-->
 
 
-<button class=BFC id=BFC_show_help type=button><span id=BFC_show_hide_ex>Show/Hide</span> Expanded Descriptions</button>
+
 <button class=BFC id=BFC_reset_inputs type=reset>Reset/Clear Inputs</button>
 </div><!--//conductors & additional-->
 
@@ -508,6 +528,7 @@ for (var size of WIRE_SIZES) {
 }
 var CONDUCTOR_RULES = [$TERMS, $SPLICES, $PASS, $LOOPS]; //But NOT $ALLOWS! $ALLOWS are result fields, not inputs.
 
+
 var $INTERNAL_CLAMP    = E_('internal_clamp');
 var $SUPPORT_FITTINGS  = E_('support_fittings');
 var $DEVICES           = E_('devices');
@@ -543,9 +564,10 @@ var $BOX_LIST_TABLE  = E_('box_list_table');
 var $BOX_LIST_HEADER = E_('box_list_header');
 var $BOX_LIST        = E_('box_list');
 
+var $SHOW_HELP_CON_FILL = E_('show_help_con_fill');
+var $SHOW_HELP_ADD_FILL = E_('show_help_add_fill');
+
 var $RESET_INPUTS = E_('reset_inputs');
-var $SHOW_HELP    = E_('show_help');
-var $SHOW_HIDE_EX = E_('show_hide_ex');
 var $SHOW_BOXES   = E_('show_boxes');
 
 var $LICENSE          = E_('LICENSE');
@@ -995,8 +1017,16 @@ function Assign_Events() {
 	}
 
 
-	$SHOW_HELP.onclick = function() { Show_Hide_Class('help', this, $SHOW_HIDE_EX, "Show", "Hide"); }
-	$SHOW_MATH.onclick = function() { Show_Hide_Class('allowance_math', this, this, "+", "&ndash;"); }
+	$SHOW_HELP_CON_FILL.onclick = function() {
+		Show_Hide_Class('help_con_fill', this, $SHOW_HELP_CON_FILL, "+", "-"); //ⓘ (i)
+	};
+
+	$SHOW_HELP_ADD_FILL.onclick = function() {
+		Show_Hide_Class('help_add_fill', this, this, "+", "-");
+	}
+
+
+	$SHOW_MATH.onclick = function() { Show_Hide_Class('allowance_math', this, this, "+", "-"); }
 
 	$SHOW_LICENSE.onclick = function() {
 		Show_Hide_Class('copyright_container', this, this, "Show License", "Hide License"); 
@@ -1022,12 +1052,12 @@ function Init() { //***********************************************************/
 
 	Init_Input_States();
 
-	Show_Hide_Class('allowance_math', $SHOW_MATH, $SHOW_MATH, '+', '&ndash;', 'init')
-
-	Show_Hide_Class('help', $SHOW_HELP, $SHOW_HIDE_EX, 'Show', 'Hide', 'init')
+	Show_Hide_Class('help_con_fill', $SHOW_HELP_CON_FILL, $SHOW_HELP_CON_FILL, '+', '-', 'init')
+	Show_Hide_Class('help_add_fill', $SHOW_HELP_ADD_FILL, $SHOW_HELP_ADD_FILL, '+', '-', 'init')
+	Show_Hide_Class('allowance_math', $SHOW_MATH, $SHOW_MATH, '+', '-', 'init')
+	Show_Hide_Class('copyright_container', $SHOW_LICENSE, $SHOW_LICENSE, 'Show License', 'Hide License', 'init')
 
 	$LICENSE_ONSCREEN.innerHTML = $LICENSE.innerHTML.trim();
-	Show_Hide_Class('copyright_container', $SHOW_LICENSE, $SHOW_LICENSE, 'Show License', 'Hide License', 'init')
 
 	//Populate per conductor allowances for results math.
 	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size].toFixed(2); }
@@ -1040,6 +1070,9 @@ function Init() { //***********************************************************/
 	$CONTAINER.style.display = "block";
 
 }//end Init() //***************************************************************/
+
+
+
 
 window.addEventListener("load", function() { Init() } );
 })();</script>
