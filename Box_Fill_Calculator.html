@@ -5,9 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<meta name="updated" content="2020-02-25 1400 ET">
-
-
+<template id=BFC_UPDATED>2022-02-03 1000 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -35,11 +33,11 @@ SOFTWARE.
 
 
 <style>
-body { margin: 0; overflow-y: scroll; background-color: rgb(220,230,255); }
+body { margin: 0; overflow-y: scroll; background-color: rgb(160,180,200); }
 
 td h4.BFC { margin: .8rem 0 0 0; }
 
-input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 2pt 1pt #0F0; }
+input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 5pt 2pt #0F0; }
 
 input.BFC, select.BFC { font-size: 1rem; font-family: arial; text-align: center; border-radius: 4px; border: solid 1px #888; }
 input[type=text].BFC  { width: 3rem; padding: 1px 0; font-weight: bold }
@@ -97,14 +95,15 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 .BFC_additional    { width: 100%; margin: 1rem 0 .5rem 0; }
 .BFC_additional tr td:last-child { text-align: center; width: 6rem; }
-.BFC_additional tr.BFC_devices_input_row td { border-bottom: dotted 1px #777; }
-.BFC_additional tr.BFC_largest_device_conductor_row  td { border-top: 0; }
+.BFC_additional tr.BFC_devices_EGC_input_rows td { border-bottom: dotted 1px #777; }
+.BFC_additional tr.BFC_largest_device_conductor_or_EGC_row  td { border-top: 0; }
 
 .BFC_fill_info th { position: relative; }
 
 #BFC_devices { margin: 0 0 0 0; }
 
 #BFC_largest_device_conductor:disabled { opacity: .5; }
+#BFC_largest_EGC:disabled              { opacity: .5; }
 
 #BFC_results                 { margin: 0 .5rem .5rem 0; }
 #BFC_results td:last-of-type { text-align: center; width: 5rem; }
@@ -214,8 +213,8 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	<h2>Reload page if Javascript has been enabled.</h2>
 </noscript>
 
-
-<h2 class=BFC>The Box Fill Calculator</h2> <h4 class=BFC>Per NEC 314.16(B)</h4>
+<h2 class=BFC>The Box Fill Calculator</h2> <h4 class=BFC>Per NEC 314.16(B)</h4><br>
+<h4 class=BFC>(Includes the 2020 box-fill rules for ground wires.)</h4>
 
 <br>
 
@@ -229,7 +228,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		<button type=button class="BFC BFC2" id=BFC_show_help_con_fill value="none">+</button>
 		<div class=BFC_help_con_fill id=BFC_conductor_help>
 			<b>Hot & neutral wires only.</b><br>
-			For ground wires (EGC), see Additional Fill Information below.
+			For ground wires (EGC, etc.), see Additional Fill Information below.
 		</div>
 	</th></tr>
 
@@ -309,7 +308,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 	<tr>
 		<td>
-			Number of <b>Support Fittings</b> types in the box.<br>
+			<b>Number of Support Fittings</b> types in the box.<br>
 			<div class=BFC_help_add_fill>Luminaire studs or hickeys.<br>
 			A single volume allowance for each type of fitting based on largest conductor in the box.</div>
 		</td>
@@ -318,21 +317,18 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		</td>
 	</tr>
 
-	<tr class=BFC_devices_input_row>
+	<tr class=BFC_devices_EGC_input_rows>
 		<td>
-			Number of <b>Devices</b> (gangs) mounted to the box.
+			<b>Number of Devices</b> (gangs) mounted to the box.
 			<div class=BFC_help_add_fill>A double volume allowance is calculated for each gang required for mounting.</div>
 		</td>
 		<td><input type=text class=BFC id=BFC_devices maxlength=2></td>
 	</tr>
 
-	<tr class=BFC_largest_device_conductor_row>
+	<tr class=BFC_largest_device_conductor_or_EGC_row>
 		<td>
 			<b>Largest Conductor</b> connected to a Device.
-			<div class=BFC_help_add_fill>Size of the largest hot or neutral wire connected to a device in the box.  Ignore ground wires (EGC). </div>
-
-
-
+			<div class=BFC_help_add_fill>Size of the largest hot or neutral wire connected to a device in the box.  Ignore ground and bonding wires. </div>
 		</td>
 		<td>
 			<select class=BFC id=BFC_largest_device_conductor>
@@ -345,17 +341,24 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		</td>
 	</tr>
 
-	<tr>
+	<tr class=BFC_devices_EGC_input_rows>
 		<td>
-			<b>Largest EGC</b> (ground wire) that enters the box.
+			<b>Number of Grounds</b> entering the box.
 			<div class=BFC_help_add_fill>
-				Equipment Grounding Conductors (EGC), or equipment bonding jumpers.
+			Equipment Grounding Conductors (EGC) or equipment bonding jumpers.<br>
+			A single volume allowance for the first 4, and 1/4 allowance for each additional.
 			</div>
+		</td>
+		<td><input type=text class=BFC id=BFC_EGC_count maxlength=2></td>
+	</tr>
+
+	<tr class=BFC_largest_device_conductor_or_EGC_row>
+		<td>
+			<b>Largest Ground</b> that enters the box.
 		</td>
 		<td>
 			<select class=BFC id=BFC_largest_EGC>
 				<optgroup label="">
-				<option class=BFC_none  value="none" selected>None</option>
 				<option class=BFC_awg14 value="awg14">#14</option>
 				<option class=BFC_awg12 value="awg12">#12</option>
 				<option class=BFC_awg10 value="awg10">#10</option>
@@ -449,11 +452,14 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 	<tr><td class=BFC_result_item id=BFC_results_EGC>EGC
 			<div class=BFC_allowance_math>
 				<input type=text class="BFC BFC_allowances" id=BFC_per_egc disabled> x
-				<input type=text class="BFC BFC_allowances BFC_plain" id=BFC_egc_cnt disabled value=1>
+				<input type=text class="BFC BFC_allowances" id=BFC_egc_cnt disabled> 
 			</div>
 		</td>
 		<td id=BFC_allowance_Ground>--</td>
 	</tr>
+
+
+
 	<tr class=BFC_min_required_size><th>Total Allowance /<br>Minimum Required<br>Box Size</th><th id=BFC_Min_Box_Size>ERROR</th></tr>
 </table>
 
@@ -487,8 +493,8 @@ List Standard Metal Boxes:
 </h3>
 
 
-<p class=BFC>
-Copyright © 2019  https://github.com/Self-Evident</p>
+<p class=BFC>Copyright © 2019  https://github.com/Self-Evident</p>
+<p id=BFC_updated_displayed></p>
 <button type=button class=BFC id=BFC_show_license>Show License</button><br>
 <pre class=BFC_copyright_container id="BFC_license_onscreen"></pre>
 
@@ -531,6 +537,7 @@ var $INTERNAL_CLAMP    = E_('internal_clamp');
 var $SUPPORT_FITTINGS  = E_('support_fittings');
 var $DEVICES           = E_('devices');
 var $LARGEST_DEVICE_CONDUCTOR = E_('largest_device_conductor');
+var $EGC_COUNT         = E_('EGC_count');
 var $LARGEST_EGC       = E_('largest_EGC');
 
 var $SHOW_MATH = E_('show_math');
@@ -557,6 +564,7 @@ var $FITTINGS_CNT = E_('fittings_cnt');
 var $PER_DEVICE   = E_('per_device');
 var $DEVICES_CNT  = E_('devices_cnt');
 var $PER_EGC      = E_('per_egc');
+var $EGC_CNT      = E_('egc_cnt');
 
 var $BOX_LIST_TABLE  = E_('box_list_table');
 var $BOX_LIST_HEADER = E_('box_list_header');
@@ -568,9 +576,11 @@ var $SHOW_HELP_ADD_FILL = E_('show_help_add_fill');
 var $RESET_INPUTS = E_('reset_inputs');
 var $SHOW_BOXES   = E_('show_boxes');
 
-var $LICENSE          = E_('LICENSE');
-var $SHOW_LICENSE     = E_('show_license');
-var $LICENSE_ONSCREEN = E_('license_onscreen');
+var $UPDATED           = E_('UPDATED');
+var $UPDATED_DISPLAYED = E_('updated_displayed');
+var $LICENSE           = E_('LICENSE');
+var $SHOW_LICENSE      = E_('show_license');
+var $LICENSE_ONSCREEN  = E_('license_onscreen');
 
 
 
@@ -862,6 +872,9 @@ function Init_Input_States() {
 	if (Parse_Int($DEVICES.value) < 1) { $LARGEST_DEVICE_CONDUCTOR.disabled = true; }
 	else                               { $LARGEST_DEVICE_CONDUCTOR.disabled = false; }
 
+	if (Parse_Int($EGC_COUNT.value) < 1) { $LARGEST_EGC.disabled = true; }
+	else                                 { $LARGEST_EGC.disabled = false; }
+
 	Set_Style_per_awg($LARGEST_DEVICE_CONDUCTOR, $LARGEST_DEVICE_CONDUCTOR.value, 1);
 	Set_Style_per_awg($LARGEST_EGC,              $LARGEST_EGC.value, 1);
 }//end Init_Input_States()
@@ -937,16 +950,25 @@ function Calculate_Min_Box_Size() {
 	total_allowances += allowance;
 	Show_Math_and_Output_Results(size, allowance, $PER_DEVICE, ALLOWANCES[size], $ALLOWANCE_DEVICES, $RESULTS_DEVICES, $DEVICES_CNT, $DEVICES);
 
+
 	//EGC
+	var egc_count = Normalize_Input($EGC_COUNT);
 	var size = $LARGEST_EGC.value;
-	var allowance = ALLOWANCES[size];
+	var allowance = 0;
+
+	     if (egc_count > 4) { allowance += ALLOWANCES[size] * (egc_count / 4); $EGC_CNT.value = egc_count + " /4"; }
+	else if (egc_count > 0) { allowance += ALLOWANCES[size];                   $EGC_CNT.value = 1; }
+	
+	Show_Math_and_Output_Results(size, allowance, $PER_EGC, ALLOWANCES[size], $ALLOWANCE_GROUND, $RESULTS_EGC);
+
 	total_allowances += allowance;
-	Show_Math_and_Output_Results(size, allowance, $PER_EGC, allowance, $ALLOWANCE_GROUND, $RESULTS_EGC);
+
 
 
 	Set_Style_per_awg($INTERNAL_CLAMP,   largest_conductor_in_box,        $INTERNAL_CLAMP.value);
 	Set_Style_per_awg($SUPPORT_FITTINGS, largest_conductor_in_box,        $SUPPORT_FITTINGS.value);
 	Set_Style_per_awg($DEVICES,          $LARGEST_DEVICE_CONDUCTOR.value, $DEVICES.value);
+	Set_Style_per_awg($EGC_COUNT,        $LARGEST_EGC.value,              $EGC_COUNT.value);
 
 	List_Standard_Boxes(total_allowances);
 
@@ -977,26 +999,18 @@ function Assign_Events() {
 	$SUPPORT_FITTINGS.oninput = function(){ Calculate_Min_Box_Size(); }
 
 
-	$DEVICES.onkeydown =  function(e){
-		//Handle tab presses only.
-		//If $DEVICES.value changes from 0 to (> 0), and tab is pressed, set $LARGEST_DEVICE_CONDUCTOR.focus().
-		//$LARGEST_DEVICE_CONDUCTOR is disabled if $DEVICES.value == 0, and is not yet enabled & able to receive focus
-		//until after $DEVICES.onchange is processed, as onchange events are processed after onkeydown.
-		Normalize_Event(e);
-		if (e.shiftKey || (e.key_code != 9)) { return; }
-		
-		if (Parse_Int(this.value) == 0) 
-			 { var target = $LARGEST_EGC             ; }
-		else { var target = $LARGEST_DEVICE_CONDUCTOR; }
-		
-		setTimeout(function() { target.focus() }, 1);
-	} 
-	
 	$DEVICES.oninput = function(){
 		Calculate_Min_Box_Size();
 		Set_Style_per_awg(this, $LARGEST_DEVICE_CONDUCTOR.value, this.value);
 		if (Parse_Int(this.value) < 1) { $LARGEST_DEVICE_CONDUCTOR.disabled = true; }
 		else                           { $LARGEST_DEVICE_CONDUCTOR.disabled = false; }
+	}
+
+	$EGC_COUNT.oninput = function(){
+		Calculate_Min_Box_Size();
+		Set_Style_per_awg(this, $LARGEST_EGC.value, this.value);
+		if (Parse_Int(this.value) < 1) { $LARGEST_EGC.disabled = true; }
+		else                           { $LARGEST_EGC.disabled = false; }
 	}
 
 	$LARGEST_DEVICE_CONDUCTOR.onchange = function(){ Calculate_Min_Box_Size(); Set_Style_per_awg(this, this.value, 1); }
@@ -1064,6 +1078,8 @@ function Init() { //***********************************************************/
 	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "none") { $SHOW_BOXES.value = "some" }
 
 	Calculate_Min_Box_Size();
+
+	$UPDATED_DISPLAYED.innerHTML = "Updated " + $UPDATED.innerHTML;
 
 	$CONTAINER.style.display = "block";
 
