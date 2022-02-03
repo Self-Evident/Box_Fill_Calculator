@@ -9,7 +9,7 @@
 * Lists suitable standard box sizes based on the calculated Total Allowance!
 * And of course, and better than ever before, it does absolutely nothing else!
 
-### Demo: [spokecalculator.net/BFC](http://spokecalculator.net/other/bfc)
+### Demo: [spokecalculator.net/other/bfc](http://spokecalculator.net/other/bfc)
 
 ### Download: [current version](https://raw.githubusercontent.com/Self-Evident/Box_Fill_Calculator/master/Box_Fill_Calculator.html)
 
