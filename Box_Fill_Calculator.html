@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-03 1000 ET</template>
+<template id=BFC_UPDATED>2022-02-10 2310 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -225,7 +225,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 	<tr><th colspan=5>
 		Conductor Fill Information
-		<button type=button class="BFC BFC2" id=BFC_show_help_con_fill value="none">+</button>
+		<button type=button class="BFC BFC2" id=BFC_show_help_con_fill>+</button>
 		<div class=BFC_help_con_fill id=BFC_conductor_help>
 			<b>Hot & neutral wires only.</b><br>
 			For ground wires (EGC, etc.), see Additional Fill Information below.
@@ -380,7 +380,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 <div class=BFC_results_and_reset>
 <table class=BFC id=BFC_results>
 	<tr><th colspan=2>Results</th></tr>
-	<tr class=BFC_results_col_hdrs><td>Allowance for
+	<tr class=BFC_results_col_hdrs><td>Allowances for
 		<button type=button class=BFC id=BFC_show_math>+</button></td>
 		<td>in<sup>3</sup></td>
 	</tr>
@@ -460,7 +460,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 
 
-	<tr class=BFC_min_required_size><th>Total Allowance /<br>Minimum Required<br>Box Size</th><th id=BFC_Min_Box_Size>ERROR</th></tr>
+	<tr class=BFC_min_required_size><th>Total Allowances /<br>Minimum Required<br>Box Size</th><th id=BFC_Min_Box_Size>ERROR</th></tr>
 </table>
 
 <br>
@@ -519,6 +519,11 @@ var WIRE_SIZES = ['awg14', 'awg12', 'awg10', 'awg8', 'awg6'];
 //Space allowance per conductor for given wire sizes, in cubic inches.
 var ALLOWANCES = {"none": 0, 'awg14':2.00, 'awg12':2.25, 'awg10':2.50, 'awg8':3.00, 'awg6':5.00}
 
+//Used to save/load settings to/from localStorage.
+var CONDUCTOR_TYPES  = ['terms', 'splices', 'pass', 'loops'];
+var ADDITIONAL_TYPES = ['internal_clamp', 'support_fittings', 'devices', 'largest_device_conductor', 'EGC_count', 'largest_EGC'];
+
+var _INIT_ = true; //Used during Init().
 
 var $CONTAINER = E_('container');
 
@@ -792,31 +797,33 @@ function Output_Result($output, allowance, size, $result_desc) {
 
 
 
-function Show_Hide_Class(class_name, $show_btn, $text, show_text, hide_text, init) {
+function Show_Hide_Class(class_name, $show_btn, show_text, hide_text) {
 	//class_name without any _NS_ prefix.
 	//FF worked by just using "helps" as the object of a for/of loop, as in: for (var $section of helps) {...}.
 	//But Edge, not so much.  I don't know why.  But, what else is new. In anycase, it works in Edge now.
 	var helps = D.getElementsByClassName(_NS_ + class_name);
 	var help_sections = Object.values(helps);
 
-	if (init === "init") {
+	if (_INIT_) {
 		$show_btn.value = localStorage.getItem($show_btn.id);
 		//"pre-toggle" now, since we want to preserve saved state (from localStorage).
 		if ($show_btn.value === '') { $show_btn.value = "none"; } else  { $show_btn.value = ""; }
 	}
 
-	if ($show_btn.value === "") { $show_btn.value = "none"; $text.innerHTML = show_text; }
-	else                        { $show_btn.value = ""    ; $text.innerHTML = hide_text; }
+	if ($show_btn.value === "") { $show_btn.value = "none"; $show_btn.innerHTML = show_text; }
+	else                        { $show_btn.value = ""    ; $show_btn.innerHTML = hide_text; }
 
-	if (init !== "init") { localStorage.setItem($show_btn.id, $show_btn.value); }
-
+	if (!_INIT_) { localStorage.setItem($show_btn.id, $show_btn.value); }
+	
+	if ($show_btn.value == "none") { localStorage.removeItem($show_btn.id); }
+	
 	for (var $section of help_sections) { $section.style.display = $show_btn.value; }
 }//end Show_Hide_Class()
 
 
 
 
-function List_Standard_Boxes(min_size) {
+function List_Standard_Boxes(min_size) { 
 
 	//Change wording in header based on what's shown.
 	if ($SHOW_BOXES.value == "some") {
@@ -917,7 +924,17 @@ function Show_Math_and_Output_Results(size, allowance, $per, allow_per, $allowan
 		Normalize_Input($per)
 		if (allow_per > 0) { $per.value = Normalize_Input($per).toFixed(2); }
 	}
-	if ($cnt) { $cnt.value = $what.value; }
+	if ($cnt) {
+		$cnt.value = $what.value;
+		if ($cnt == $EGC_CNT) {
+			var egc_count = Normalize_Input($EGC_COUNT);
+			if (egc_count > 4) { $cnt.value = $cnt.value + " /4"; }
+			else
+			if (egc_count > 0) { $cnt.value = 1;  }
+			else               { $cnt.value = ""; }
+		}
+	}
+
 	Output_Result($allowance_output, allowance, size, $results);
 }//end Show_Math_and_Output_Results()
 
@@ -950,20 +967,17 @@ function Calculate_Min_Box_Size() {
 	total_allowances += allowance;
 	Show_Math_and_Output_Results(size, allowance, $PER_DEVICE, ALLOWANCES[size], $ALLOWANCE_DEVICES, $RESULTS_DEVICES, $DEVICES_CNT, $DEVICES);
 
-
 	//EGC
-	var egc_count = Normalize_Input($EGC_COUNT);
 	var size = $LARGEST_EGC.value;
 	var allowance = 0;
+	var egc_count = Normalize_Input($EGC_COUNT);
+	if (egc_count > 4) { allowance += ALLOWANCES[size] * (egc_count / 4); }	else
+	if (egc_count > 0) { allowance += ALLOWANCES[size] }
+	total_allowances += allowance;	
+	Show_Math_and_Output_Results(size, allowance, $PER_EGC, ALLOWANCES[size], $ALLOWANCE_GROUND, $RESULTS_EGC, $EGC_CNT, $EGC_COUNT);
 
-	     if (egc_count > 4) { allowance += ALLOWANCES[size] * (egc_count / 4); $EGC_CNT.value = egc_count + " /4"; }
-	else if (egc_count > 0) { allowance += ALLOWANCES[size];                   $EGC_CNT.value = 1; }
-	
-	Show_Math_and_Output_Results(size, allowance, $PER_EGC, ALLOWANCES[size], $ALLOWANCE_GROUND, $RESULTS_EGC);
-
-	total_allowances += allowance;
-
-
+	//In case Normalize_Input() normalized any <input>s.
+	if (!_INIT_) { Save_to_localStorage(); }
 
 	Set_Style_per_awg($INTERNAL_CLAMP,   largest_conductor_in_box,        $INTERNAL_CLAMP.value);
 	Set_Style_per_awg($SUPPORT_FITTINGS, largest_conductor_in_box,        $SUPPORT_FITTINGS.value);
@@ -974,8 +988,64 @@ function Calculate_Min_Box_Size() {
 
 	$MIN_BOX_SIZE.innerHTML = total_allowances;
 
-	return total_allowances;
 }//end Calculate_Min_Box_Size()
+
+
+
+
+function Parse_Json(string) {
+	//Currently, only used to parse returned saved settings from localStorage.
+	//If the parse fails, return null, as localStorage does if a localStorage item doesn't exit.
+	//ie: return null on any non object/failure/error.
+	try {
+		var parsed = JSON.parse(string);
+		// Non-exception exceptions:
+		// JSON.parse(false) and JSON.parse(1234) simply return false & 1234.
+		// We'd prefer null, but JSON.parse(null) returns null, and typeof null === "object".
+		// So check for those. And since null is falsey, this works:
+		if (parsed && typeof parsed === "object") { return parsed; }
+	}
+	catch (e) {}
+	return null;
+}//end Parse_Json()
+
+
+
+
+function Save_to_localStorage() {
+	var setting  = '';
+	var settings = {};
+	
+	for (var type of CONDUCTOR_TYPES) {
+		for (var size of WIRE_SIZES) {
+			var base_id = type + "_" + size;
+			settings[base_id] = E_(base_id).value;
+		}
+	}
+	
+	for (var type of ADDITIONAL_TYPES) { settings[type] = E_(type).value; }
+
+	localStorage.setItem(_NS_ + "SETTINGS", JSON.stringify(settings));
+}//end Save_to_localStorage()
+
+
+
+
+function Load_from_localStorage() {
+	var settings = {};
+	var saved_settings = Parse_Json(localStorage.getItem(_NS_ + 'SETTINGS'));
+
+	if (saved_settings == null) { return; }
+
+	for (var key in saved_settings) {
+		if (E_(key)) { //skips invalid keys
+			E_(key).value = saved_settings[key];
+			settings[key] = saved_settings[key];
+		}
+	}
+
+	localStorage.setItem(_NS_ + "SETTINGS", JSON.stringify(settings));
+}//end Load_from_localStorage()
 
 
 
@@ -985,6 +1055,8 @@ function Assign_Events() {
 	D.addEventListener("keydown", function(e) { Space_or_Enter_on_Button(e); Scroll_Blur(e); });
 	D.addEventListener("keyup",   function(e) { Space_or_Enter_on_Button(e); });
 
+
+	//Note: Save_to_localStorage() is the last line of Calculate_Min_Box_Size(), so is not needed after it in events functions.
 
 	for (var size of WIRE_SIZES) {
 		$TERMS  [size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
@@ -1023,32 +1095,42 @@ function Assign_Events() {
 		$SUPPORT_FITTINGS.value = "";
 		$DEVICES.value = "";
 		$LARGEST_DEVICE_CONDUCTOR.selectedIndex = 0;
+		$EGC_COUNT.value = "";
 		$LARGEST_EGC.selectedIndex = 0;
+
 		Init_Input_States();
 		Calculate_Min_Box_Size();
+
+		$BOX_LIST_HEADER.innerHTML = "--";
+		$BOX_LIST_TABLE.style.display = "none";
+		$SHOW_BOXES.selectedIndex = 0;
+		localStorage.removeItem($SHOW_BOXES.id)
+
+		$SHOW_HELP_CON_FILL.value = '';
+		Show_Hide_Class('help_con_fill', $SHOW_HELP_CON_FILL, "+", "-");
+
+		$SHOW_HELP_ADD_FILL.value = '';
+		Show_Hide_Class('help_add_fill', $SHOW_HELP_ADD_FILL, "+", "-");
+
+		$SHOW_MATH.value = '';
+		Show_Hide_Class('allowance_math', $SHOW_MATH, "+", "-");
+
+		localStorage.removeItem(_NS_ + "SETTINGS");
 	}
 
 
-	$SHOW_HELP_CON_FILL.onclick = function() {
-		Show_Hide_Class('help_con_fill', this, $SHOW_HELP_CON_FILL, "+", "-"); //ⓘ (i)
-	};
-
-	$SHOW_HELP_ADD_FILL.onclick = function() {
-		Show_Hide_Class('help_add_fill', this, this, "+", "-");
-	}
-
-
-	$SHOW_MATH.onclick = function() { Show_Hide_Class('allowance_math', this, this, "+", "-"); }
-
-	$SHOW_LICENSE.onclick = function() {
-		Show_Hide_Class('copyright_container', this, this, "Show License", "Hide License"); 
-		$LICENSE_ONSCREEN.scrollIntoView();
+	$SHOW_HELP_CON_FILL.onclick = function() { Show_Hide_Class('help_con_fill',       this, "+", "-"); } //ⓘ (i)
+	$SHOW_HELP_ADD_FILL.onclick = function() { Show_Hide_Class('help_add_fill',       this, "+", "-"); }
+	$SHOW_MATH.onclick          = function() { Show_Hide_Class('allowance_math',      this, "+", "-"); }
+	$SHOW_LICENSE.onclick       = function() { Show_Hide_Class('copyright_container', this, "Show License", "Hide License"); 
+											   $LICENSE_ONSCREEN.scrollIntoView();
 	}
 
 
 	$SHOW_BOXES.onchange = function() {
-		Calculate_Min_Box_Size();
-		localStorage.setItem(this.id, this.value);
+		List_Standard_Boxes(E_('Min_Box_Size').innerHTML * 1);
+		if (this.value == "none") { localStorage.removeItem(this.id); }
+		else                      { localStorage.setItem(this.id, this.value); }
 	}
 
 }//end Assign_Events()
@@ -1058,16 +1140,20 @@ function Assign_Events() {
 
 function Init() { //***********************************************************/
 
+	_INIT_ = true;
+
 	Assign_Events();
 
 	Sort_Format_STANDARD_BOXES();
 
+	Load_from_localStorage();
+
 	Init_Input_States();
 
-	Show_Hide_Class('help_con_fill', $SHOW_HELP_CON_FILL, $SHOW_HELP_CON_FILL, '+', '-', 'init')
-	Show_Hide_Class('help_add_fill', $SHOW_HELP_ADD_FILL, $SHOW_HELP_ADD_FILL, '+', '-', 'init')
-	Show_Hide_Class('allowance_math', $SHOW_MATH, $SHOW_MATH, '+', '-', 'init')
-	Show_Hide_Class('copyright_container', $SHOW_LICENSE, $SHOW_LICENSE, 'Show License', 'Hide License', 'init')
+	Show_Hide_Class('help_con_fill',       $SHOW_HELP_CON_FILL, '+', '-')
+	Show_Hide_Class('help_add_fill',       $SHOW_HELP_ADD_FILL, '+', '-')
+	Show_Hide_Class('allowance_math',      $SHOW_MATH,          '+', '-')
+	Show_Hide_Class('copyright_container', $SHOW_LICENSE, 'Show License', 'Hide License')
 
 	$LICENSE_ONSCREEN.innerHTML = $LICENSE.innerHTML.trim();
 
@@ -1075,7 +1161,10 @@ function Init() { //***********************************************************/
 	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size].toFixed(2); }
 
 	$SHOW_BOXES.value = localStorage.getItem($SHOW_BOXES.id);
-	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "none") { $SHOW_BOXES.value = "some" }
+	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "some") { 
+		$SHOW_BOXES.value = "none";
+		localStorage.removeItem($SHOW_BOXES.id);
+	}
 
 	Calculate_Min_Box_Size();
 
@@ -1083,6 +1172,7 @@ function Init() { //***********************************************************/
 
 	$CONTAINER.style.display = "block";
 
+	_INIT_ = false;
 }//end Init() //***************************************************************/
 
 
