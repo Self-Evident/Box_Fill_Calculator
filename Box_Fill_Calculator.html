@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-10 2310 ET</template>
+<template id=BFC_UPDATED>2022-02-11 1930 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -34,6 +34,8 @@ SOFTWARE.
 
 <style>
 body { margin: 0; overflow-y: scroll; background-color: rgb(160,180,200); }
+
+*, *:before, *:after { box-sizing: border-box; }
 
 td h4.BFC { margin: .8rem 0 0 0; }
 
@@ -74,7 +76,7 @@ button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mo
 .BFC:focus             { outline:none; }
 .BFC::-moz-focus-inner { border:0; }
 
-table.BFC        { border-collapse: collapse; border: solid 1px #555; display: inline-table; vertical-align: top; }
+table.BFC        { border-collapse: collapse; border: solid 1px #555; display: inline-table; vertical-align: top; margin: 1rem 0 1rem 0; width: 100%; }
 .BFC td, .BFC th { padding: .3rem; border: solid 1px #555; }
 .BFC th          { padding: .4rem .3rem; font-size: 1.2rem; } 
 
@@ -82,18 +84,17 @@ h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
 h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 #BFC_container   { display: none; } /** Temporary until page loads. **/
-#BFC_container   { padding: 0; margin: 0 .5rem; }
-#BFC_container * { box-sizing: border-box; font-family: arial; }
-.BFC_conductor_container  { display: inline-block; margin: 0 .5rem .5rem 0; vertical-align: top; max-width: 29rem; }
-.BFC_results_and_reset    { display: inline-block; }
+#BFC_container   { padding: 0 .5rem; margin: 0; } /*. //##### ##### .*/
+#BFC_container * { font-family: arial; }
+.BFC_conductor_container  { display: inline-block; margin: 0 1rem 1rem 0; vertical-align: top; max-width: 29rem; }
+.BFC_results_and_reset    { display: inline-block; margin: 0 1rem 1rem 0;}
 
-.BFC_conductors    { margin: 0 0 0 0; width: 100%; }
 .BFC_conductors td { width: 20% } /* See comments & styles at end of sytle sheet. */
 .BFC_conductors td.wiresize { text-align: center; }
 
 #BFC_conductor_help { display: inline-block; border-top: dotted 1px #555; margin-top: .3rem; padding: .3rem 0; font-weight: normal; font-size: .9rem}
 
-.BFC_additional    { width: 100%; margin: 1rem 0 .5rem 0; }
+.BFC_additional    { width: 100%; }
 .BFC_additional tr td:last-child { text-align: center; width: 6rem; }
 .BFC_additional tr.BFC_devices_EGC_input_rows td { border-bottom: dotted 1px #777; }
 .BFC_additional tr.BFC_largest_device_conductor_or_EGC_row  td { border-top: 0; }
@@ -105,7 +106,6 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 #BFC_largest_device_conductor:disabled { opacity: .5; }
 #BFC_largest_EGC:disabled              { opacity: .5; }
 
-#BFC_results                 { margin: 0 .5rem .5rem 0; }
 #BFC_results td:last-of-type { text-align: center; width: 5rem; }
 #BFC_results td.BFC_result_item  { padding-left: 1rem; }
 #BFC_results .BFC_allowances { width: 2.5rem; font-weight: normal; }
@@ -128,18 +128,18 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 }
 
 
-#BFC_box_list_table     { width: 23rem; margin: 0 0 .5rem 0; }
-#BFC_box_list_table td  { text-align: center; }
-#BFC_box_list_table td  { padding: .3rem .2rem; }
-#BFC_box_list_table #BFC_box_list_h2    { font-weight: bold; }
-#BFC_box_list_table .BFC_boxlist_vol    { width: 4rem; }
-#BFC_box_list_table .BFC_boxlist_type   { width: 11rem; }
-#BFC_box_list_table .BFC_boxlist_trade  { }
+#BFC_box_list_table     { min-width: 18rem; max-width: 21rem; }
+#BFC_box_list_table td  { text-align: center; padding: .21rem 0; }
+#BFC_box_list_table #BFC_box_list_h2     { font-weight: bold; }
+#BFC_box_list_table td.BFC_boxlist_vol   { padding: .21rem .8rem; }
+#BFC_box_list_table td.BFC_boxlist_type  { }
+#BFC_box_list_table td.BFC_boxlist_trade { }
+
+#BFC_show_boxes, #BFC_reset_inputs { margin-top: 1rem; }
 
 .BFC_sub_header { font-weight: normal; font-size: 95%; }
 
-.BFC_none2 { } /* For non selects. */
-.BFC_none  { background-color: rgba(255,255,255,.7) } /* For selects. */
+.BFC_none  { background-color: rgba(255,255,255,.7) } /* For <selects>. */
 .BFC_awg14 { background-color: #FFFee0 }
 .BFC_awg12 { background-color: #FFFF00 }
 .BFC_awg10 { background-color: orange }
@@ -147,7 +147,9 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_awg6  { background-color: #222; color: white; }
 
 .BFC_non_zero { background-color: #dFd; }
-.BFC_frac { display: inline-block; margin: 0 .2rem 0 .1rem; }
+div.BFC_frac { display: inline-block; margin: 0 0 0 .1rem; }
+sup.BFC_frac, sub.BFC_frac { margin: 0; display: inline-block; font-size: 70%; }
+
 
 .BFC_suitable_standard_box { background-color: #FFF; font-weight: bold }
 
@@ -162,7 +164,7 @@ noscript.BFC {
 
 noscript.BFC h2 {  margin: .5rem .5rem; }
 
-.BFC_disclaimer { border: solid 1px #555; padding: 1rem; margin: .5rem 0; }
+.BFC_disclaimer { display: inline-block; border: solid 1px #555; padding: 1rem; margin: .5rem 0; }
 
 #BFC_license_onscreen {
 	font-family: courier;
@@ -172,6 +174,9 @@ noscript.BFC h2 {  margin: .5rem .5rem; }
 	display: inline-block;
 	padding: 1rem;
 }
+
+
+#BFC_footer { display: inline-block; max-width: 55rem; }
 
 
 /**************************************./
@@ -221,7 +226,7 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 <div class=BFC_conductor_container>
 
-<table class="BFC BFC_conductors BFC_fill_info">
+<table class="BFC BFC_fill_info">
 
 	<tr><th colspan=5>
 		Conductor Fill Information
@@ -371,7 +376,6 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 </table><!--//BFC_additional-->
 
 
-
 <button class=BFC id=BFC_reset_inputs type=reset>Reset/Clear All Inputs</button>
 </div><!--//conductors & additional-->
 
@@ -486,7 +490,8 @@ List Standard Metal Boxes:
 	<tbody id=BFC_box_list><!--//Populated onload--></tbody>
 </table>
 
-
+<br>
+<div id=BFC_footer>
 <h3 class="BFC_disclaimer">
 	No guarantees are made as to the accuracy of calculations or compliance with
 	local codes.&nbsp; Verify all calculations with a professional, licensed, electrician.
@@ -497,8 +502,8 @@ List Standard Metal Boxes:
 <p id=BFC_updated_displayed></p>
 <button type=button class=BFC id=BFC_show_license>Show License</button><br>
 <pre class=BFC_copyright_container id="BFC_license_onscreen"></pre>
-
-</div><!--/container-->
+</div>
+</div><!--BFC_container-->
 
 
 
@@ -509,7 +514,7 @@ var D = document;
 function E(id)  { return D.getElementById(id); }
 function E_(id) { return D.getElementById(_NS_ + id); }
 
-var _NS_ = "BFC_";	//A "name space" prefix for id's & classes.
+var _NS_ = "BFC_";	//A "Name Space" prefix for id's & classes.
 					//The prefix is also used by itself as a class name (with or without the trailing underscore, "_"),
 					//to select all specified tags for styling only (not used by JS).
 					//  eg: <style>div.BFC { some styles }</style> <div class=BFC> <div class=BFC> ... etc...
@@ -632,7 +637,9 @@ var BOX = {};
 
 function Format_Fraction(string, lead, numer, denom) {
 	var search_for = lead + numer + "/" + denom;
-	var replace_with = "<div class=BFC_frac>" + numer + "&frasl;" + denom + "</div>";
+	var replace_with  = "<div class=" + _NS_ + "frac>";
+	    replace_with += "<sup class=" + _NS_ + "frac>" + numer + "</sup>&frasl;";
+	    replace_with += "<sub class=" + _NS_ + "frac>" + denom + "</sub></div>";
 	return string.replace( new RegExp( search_for, 'g' ), replace_with )
 }//end Format_Fraction()
 
@@ -854,8 +861,8 @@ function List_Standard_Boxes(min_size) {
 		if (!show_all && ((box[BOX.SIZE] < min_size) || (count > 10))) { continue }
 		count++;
 
-		if (box[BOX.SIZE] >= min_size) { var classes = " class=BFC_suitable_standard_box"; }
-		else                    { var classes = ""; }
+		if ((min_size > 0) && (box[BOX.SIZE] >= min_size)) { var classes = " class=BFC_suitable_standard_box"; }
+		else                                               { var classes = ""; }
 		
 		rows += "<tr" + classes + ">";
 		rows += "<td>" + box[BOX.SIZE] + "</td>";
@@ -976,9 +983,6 @@ function Calculate_Min_Box_Size() {
 	total_allowances += allowance;	
 	Show_Math_and_Output_Results(size, allowance, $PER_EGC, ALLOWANCES[size], $ALLOWANCE_GROUND, $RESULTS_EGC, $EGC_CNT, $EGC_COUNT);
 
-	//In case Normalize_Input() normalized any <input>s.
-	if (!_INIT_) { Save_to_localStorage(); }
-
 	Set_Style_per_awg($INTERNAL_CLAMP,   largest_conductor_in_box,        $INTERNAL_CLAMP.value);
 	Set_Style_per_awg($SUPPORT_FITTINGS, largest_conductor_in_box,        $SUPPORT_FITTINGS.value);
 	Set_Style_per_awg($DEVICES,          $LARGEST_DEVICE_CONDUCTOR.value, $DEVICES.value);
@@ -987,6 +991,9 @@ function Calculate_Min_Box_Size() {
 	List_Standard_Boxes(total_allowances);
 
 	$MIN_BOX_SIZE.innerHTML = total_allowances;
+
+	//In case Normalize_Input() normalized any <input>s.
+	if (!_INIT_) { Save_to_localStorage(); }
 
 }//end Calculate_Min_Box_Size()
 
