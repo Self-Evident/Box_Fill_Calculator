@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-11 1930 ET</template>
+<template id=BFC_UPDATED>2022-02-12 2030 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -84,7 +84,7 @@ h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
 h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 #BFC_container   { display: none; } /** Temporary until page loads. **/
-#BFC_container   { padding: 0 .5rem; margin: 0; } /*. //##### ##### .*/
+#BFC_container   { padding: 0 .5rem; margin: 0; }
 #BFC_container * { font-family: arial; }
 .BFC_conductor_container  { display: inline-block; margin: 0 1rem 1rem 0; vertical-align: top; max-width: 29rem; }
 .BFC_results_and_reset    { display: inline-block; margin: 0 1rem 1rem 0;}
@@ -139,6 +139,7 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 .BFC_sub_header { font-weight: normal; font-size: 95%; }
 
+.BFC_none2 { } /* For non selects. */
 .BFC_none  { background-color: rgba(255,255,255,.7) } /* For <selects>. */
 .BFC_awg14 { background-color: #FFFee0 }
 .BFC_awg12 { background-color: #FFFF00 }
@@ -512,9 +513,9 @@ List Standard Metal Boxes:
 <script>(function(){
 var D = document;
 function E(id)  { return D.getElementById(id); }
-function E_(id) { return D.getElementById(_NS_ + id); }
+function E_(id) { return D.getElementById(NS_ + id); }
 
-var _NS_ = "BFC_";	//A "Name Space" prefix for id's & classes.
+var NS_ = "BFC_";   //A "Name Space" prefix for id's & classes.
 					//The prefix is also used by itself as a class name (with or without the trailing underscore, "_"),
 					//to select all specified tags for styling only (not used by JS).
 					//  eg: <style>div.BFC { some styles }</style> <div class=BFC> <div class=BFC> ... etc...
@@ -524,11 +525,11 @@ var WIRE_SIZES = ['awg14', 'awg12', 'awg10', 'awg8', 'awg6'];
 //Space allowance per conductor for given wire sizes, in cubic inches.
 var ALLOWANCES = {"none": 0, 'awg14':2.00, 'awg12':2.25, 'awg10':2.50, 'awg8':3.00, 'awg6':5.00}
 
-//Used to save/load settings to/from localStorage.
+//Used in Save_to_localStorage(). Thought it was also going to be used in Load_from_localStorage(), but no.
 var CONDUCTOR_TYPES  = ['terms', 'splices', 'pass', 'loops'];
 var ADDITIONAL_TYPES = ['internal_clamp', 'support_fittings', 'devices', 'largest_device_conductor', 'EGC_count', 'largest_EGC'];
 
-var _INIT_ = true; //Used during Init().
+var INIT = true; //Used during Init().
 
 var $CONTAINER = E_('container');
 
@@ -637,9 +638,9 @@ var BOX = {};
 
 function Format_Fraction(string, lead, numer, denom) {
 	var search_for = lead + numer + "/" + denom;
-	var replace_with  = "<div class=" + _NS_ + "frac>";
-	    replace_with += "<sup class=" + _NS_ + "frac>" + numer + "</sup>&frasl;";
-	    replace_with += "<sub class=" + _NS_ + "frac>" + denom + "</sub></div>";
+	var replace_with  = "<div class=" + NS_ + "frac>";
+	    replace_with += "<sup class=" + NS_ + "frac>" + numer + "</sup>&frasl;";
+	    replace_with += "<sub class=" + NS_ + "frac>" + denom + "</sub></div>";
 	return string.replace( new RegExp( search_for, 'g' ), replace_with )
 }//end Format_Fraction()
 
@@ -729,11 +730,11 @@ function Space_or_Enter_on_Button(e) {
 	Normalize_Event(e);
 
 	if (e.type == "keydown") {
-		if (e.key_code == 32 || e.key_code == 13) { e.target.classList.add(_NS_ + 'button_active'); }
+		if (e.key_code == 32 || e.key_code == 13) { e.target.classList.add(NS_ + 'button_active'); }
 	}
 
 	if (e.type == "keyup") {
-		if (e.key_code == 32 || e.key_code == 13) { e.target.classList.remove(_NS_ + 'button_active'); }
+		if (e.key_code == 32 || e.key_code == 13) { e.target.classList.remove(NS_ + 'button_active'); }
 	}
 }//end Space_or_Enter_on_Button()
 
@@ -743,9 +744,9 @@ function Space_or_Enter_on_Button(e) {
 function Highlight_Input($rule) {
 	//Highlight any non-zero conductor terms/splices/passthrus/loops.
 	if (Parse_Int($rule.value) > 0) {
-		$rule.classList.add(_NS_ + 'non_zero');
+		$rule.classList.add(NS_ + 'non_zero');
 	}
-	else { $rule.classList.remove(_NS_ + 'non_zero'); }
+	else { $rule.classList.remove(NS_ + 'non_zero'); }
 }//end Highlight_Input()
 
 
@@ -755,8 +756,8 @@ function Set_Style_per_awg($what, new_size, allowance) {
 	//Pass 1 for allowance if setting style irregardless, regardless of whether or not you think it's a word...
 
 	//Remove any existing size styles...
-	for (var old_size in ALLOWANCES) { $what.classList.remove(_NS_ + old_size); }
-	$what.classList.remove(_NS_ + 'none2');
+	for (var old_size in ALLOWANCES) { $what.classList.remove(NS_ + old_size); }
+	$what.classList.remove(NS_ + 'none2');
 
 	if (Parse_Int(allowance) == 0) {
 		if ($what.tagName == "SELECT" || $what.tagName == "INPUT")
@@ -765,7 +766,7 @@ function Set_Style_per_awg($what, new_size, allowance) {
 	}
 
 	//Add style for new size.
-	$what.classList.add(_NS_ + new_size);
+	$what.classList.add(NS_ + new_size);
 }//end Set_Style_per_awg()
 
 
@@ -805,13 +806,13 @@ function Output_Result($output, allowance, size, $result_desc) {
 
 
 function Show_Hide_Class(class_name, $show_btn, show_text, hide_text) {
-	//class_name without any _NS_ prefix.
+	//class_name without any NS_ prefix.
 	//FF worked by just using "helps" as the object of a for/of loop, as in: for (var $section of helps) {...}.
 	//But Edge, not so much.  I don't know why.  But, what else is new. In anycase, it works in Edge now.
-	var helps = D.getElementsByClassName(_NS_ + class_name);
+	var helps = D.getElementsByClassName(NS_ + class_name);
 	var help_sections = Object.values(helps);
 
-	if (_INIT_) {
+	if (INIT) {
 		$show_btn.value = localStorage.getItem($show_btn.id);
 		//"pre-toggle" now, since we want to preserve saved state (from localStorage).
 		if ($show_btn.value === '') { $show_btn.value = "none"; } else  { $show_btn.value = ""; }
@@ -820,7 +821,7 @@ function Show_Hide_Class(class_name, $show_btn, show_text, hide_text) {
 	if ($show_btn.value === "") { $show_btn.value = "none"; $show_btn.innerHTML = show_text; }
 	else                        { $show_btn.value = ""    ; $show_btn.innerHTML = hide_text; }
 
-	if (!_INIT_) { localStorage.setItem($show_btn.id, $show_btn.value); }
+	if (!INIT) { localStorage.setItem($show_btn.id, $show_btn.value); }
 	
 	if ($show_btn.value == "none") { localStorage.removeItem($show_btn.id); }
 	
@@ -861,7 +862,7 @@ function List_Standard_Boxes(min_size) {
 		if (!show_all && ((box[BOX.SIZE] < min_size) || (count > 10))) { continue }
 		count++;
 
-		if ((min_size > 0) && (box[BOX.SIZE] >= min_size)) { var classes = " class=BFC_suitable_standard_box"; }
+		if ((min_size > 0) && (box[BOX.SIZE] >= min_size)) { var classes = " class=" + NS_ + "suitable_standard_box"; }
 		else                                               { var classes = ""; }
 		
 		rows += "<tr" + classes + ">";
@@ -993,7 +994,7 @@ function Calculate_Min_Box_Size() {
 	$MIN_BOX_SIZE.innerHTML = total_allowances;
 
 	//In case Normalize_Input() normalized any <input>s.
-	if (!_INIT_) { Save_to_localStorage(); }
+	if (!INIT) { Save_to_localStorage(); }
 
 }//end Calculate_Min_Box_Size()
 
@@ -1032,7 +1033,7 @@ function Save_to_localStorage() {
 	
 	for (var type of ADDITIONAL_TYPES) { settings[type] = E_(type).value; }
 
-	localStorage.setItem(_NS_ + "SETTINGS", JSON.stringify(settings));
+	localStorage.setItem(NS_ + "SETTINGS", JSON.stringify(settings));
 }//end Save_to_localStorage()
 
 
@@ -1040,7 +1041,7 @@ function Save_to_localStorage() {
 
 function Load_from_localStorage() {
 	var settings = {};
-	var saved_settings = Parse_Json(localStorage.getItem(_NS_ + 'SETTINGS'));
+	var saved_settings = Parse_Json(localStorage.getItem(NS_ + 'SETTINGS'));
 
 	if (saved_settings == null) { return; }
 
@@ -1051,7 +1052,7 @@ function Load_from_localStorage() {
 		}
 	}
 
-	localStorage.setItem(_NS_ + "SETTINGS", JSON.stringify(settings));
+	localStorage.setItem(NS_ + "SETTINGS", JSON.stringify(settings));
 }//end Load_from_localStorage()
 
 
@@ -1122,7 +1123,7 @@ function Assign_Events() {
 		$SHOW_MATH.value = '';
 		Show_Hide_Class('allowance_math', $SHOW_MATH, "+", "-");
 
-		localStorage.removeItem(_NS_ + "SETTINGS");
+		localStorage.removeItem(NS_ + "SETTINGS");
 	}
 
 
@@ -1147,7 +1148,7 @@ function Assign_Events() {
 
 function Init() { //***********************************************************/
 
-	_INIT_ = true;
+	INIT = true;
 
 	Assign_Events();
 
@@ -1179,7 +1180,7 @@ function Init() { //***********************************************************/
 
 	$CONTAINER.style.display = "block";
 
-	_INIT_ = false;
+	INIT = false;
 }//end Init() //***************************************************************/
 
 
