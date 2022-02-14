@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-14_0120 ET</template>
+<template id=BFC_UPDATED>v2.00 2022-02-14 0220 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -255,12 +255,12 @@ input.BFC_non_zero { }
 <template class=BFC_theme id=BFC_THEME_DARK_GREEN data-BFC_theme_desc="Dark Green">
 body { background-color: black; color: #0F0; }
 
-.BFC:focus { outline: solid 3px #0F0; }
+.BFC:focus { outline: solid 2px #0F0; }
 
 input.BFC, select.BFC { border: solid 1px #888; color: #0F0; background-color: black;}
 
 input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
-n 
+ 
 select.BFC_none  { color: #0D0; }
 
 select.BFC_awg14 { color: #FFFee0; }
@@ -310,7 +310,7 @@ input.BFC_non_zero { background-color: #444; }
 <template class=BFC_theme id=BFC_THEME_DARK_Amber data-BFC_theme_desc="Dark Amber">
 body { background-color: black; color: #FFbf00; }
 
-.BFC:focus { outline: solid 3px #FFbf00; }
+.BFC:focus { outline: solid 2px #FFbf00; }
 
 input.BFC, select.BFC { border: solid 1px #888; color: #FFbf00;; background-color: black;}
 
@@ -348,8 +348,8 @@ button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mo
 
 .BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
 
-table.BFC        { border: solid 1px #996900; }
-.BFC td, .BFC th { border: solid 1px #996900; }
+table.BFC        { border: solid 1px #555; } /*.//##### #996900 ##### .*/
+.BFC td, .BFC th { border: solid 1px #555; }
 
 .BFC_min_required_size { background-color: #272727; }
 #BFC_Min_Box_Size { color: inherit;}
@@ -358,6 +358,173 @@ input.BFC_non_zero { background-color: #444; }
 
 .BFC_suitable_standard_box { background-color: #272727; }
 </template><!--//BFC_THEME_DARK_AMBER-->
+
+
+
+
+<template class=BFC_theme id=BFC_THEME_DARK_YELLOW data-BFC_theme_desc="Dark Yellow">
+body { background-color: black; color: #FF0; }
+
+.BFC:focus { outline: solid 2px #FF0; }
+
+input.BFC, select.BFC { border: solid 1px #888; color: #FF0;; background-color: black;}
+
+input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
+
+select.BFC_none  { color: #FF0; }
+
+select.BFC_awg14 { color: #FFFee0; }
+select.BFC_awg12 { color: #FFFF00; }
+select.BFC_awg10 { color: orange;  }
+select.BFC_awg8  { color: #EEE;    }
+select.BFC_awg6  { color: #CCC;    }
+
+option.BFC_awg14 { color: #FFFee0; }
+option.BFC_awg12 { color: #FFFF00; }
+option.BFC_awg10 { color: orange;  }
+option.BFC_awg8  { color: #EEE;    }
+option.BFC_awg6  { color: #CCC;    }
+
+.BFC_awg14 { color: #FFFee0; background-color: inherit; }
+.BFC_awg12 { color: #FFFF00; background-color: inherit; }
+.BFC_awg10 { color: orange;  background-color: inherit; }
+.BFC_awg8  { color: #EEE;    background-color: inherit; }
+.BFC_awg6  { color: #CCC;    background-color: inherit; }
+
+button.BFC {
+	border: solid 1px #555;
+	color: #FF0;
+	background-color: #000;
+	background: linear-gradient(to bottom, #666, #222, #222, #666); color: #FF0;
+}
+
+
+button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #FF0; }
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
+
+table.BFC        { border: solid 1px #555; }
+.BFC td, .BFC th { border: solid 1px #555; }
+
+.BFC_min_required_size { background-color: #272727; }
+#BFC_Min_Box_Size { color: inherit;}
+
+input.BFC_non_zero { background-color: #000; }
+
+.BFC_suitable_standard_box { background-color: #272727; }
+</template><!--//BFC_THEME_DARK_YELLOW-->
+
+
+
+
+<template class=BFC_theme id=BFC_THEME_DARK_BLUE data-BFC_theme_desc="Dark Blue">
+body { background-color: black; color: #00F; }
+
+.BFC:focus { outline: solid 3px #00F; }
+
+input.BFC, select.BFC { border: solid 1px #888; color: #00F;; background-color: black;}
+
+input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
+
+select.BFC_none  { color: #00F; }
+
+select.BFC_awg14 { color: #FFFee0; }
+select.BFC_awg12 { color: #FFFF00; }
+select.BFC_awg10 { color: orange;  }
+select.BFC_awg8  { color: #EEE;    }
+select.BFC_awg6  { color: #CCC;    }
+
+option.BFC_awg14 { color: #FFFee0; }
+option.BFC_awg12 { color: #FFFF00; }
+option.BFC_awg10 { color: orange;  }
+option.BFC_awg8  { color: #EEE;    }
+option.BFC_awg6  { color: #CCC;    }
+
+.BFC_awg14 { color: #FFFee0; background-color: inherit; }
+.BFC_awg12 { color: #FFFF00; background-color: inherit; }
+.BFC_awg10 { color: orange;  background-color: inherit; }
+.BFC_awg8  { color: #EEE;    background-color: inherit; }
+.BFC_awg6  { color: #CCC;    background-color: inherit; }
+
+button.BFC {
+	border: solid 1px #55F;
+	color: #00F;
+	background-color: #000;
+}
+
+
+button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #00F; }
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
+
+table.BFC        { border: solid 1px #555; }
+.BFC td, .BFC th { border: solid 1px #555; }
+
+.BFC_min_required_size { background-color: #272727; }
+#BFC_Min_Box_Size { color: inherit;}
+
+input.BFC_non_zero { background-color: #000; }
+
+.BFC_suitable_standard_box { background-color: #272727; }
+</template><!--//BFC_THEME_DARK_BLUE-->
+
+
+
+
+<template class=BFC_theme id=BFC_THEME_DARK_CYAN data-BFC_theme_desc="Dark Cyan">
+body { background-color: black; color: #0FF; }
+
+.BFC:focus { outline: solid 3px #0FF; }
+
+input.BFC, select.BFC { border: solid 1px #888; color: #0FF;; background-color: black;}
+
+input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
+
+select.BFC_none  { color: #0FF; }
+
+select.BFC_awg14 { color: #FFFee0; }
+select.BFC_awg12 { color: #FFFF00; }
+select.BFC_awg10 { color: orange;  }
+select.BFC_awg8  { color: #EEE;    }
+select.BFC_awg6  { color: #CCC;    }
+
+option.BFC_awg14 { color: #FFFee0; }
+option.BFC_awg12 { color: #FFFF00; }
+option.BFC_awg10 { color: orange;  }
+option.BFC_awg8  { color: #EEE;    }
+option.BFC_awg6  { color: #CCC;    }
+
+.BFC_awg14 { color: #FFFee0; background-color: inherit; }
+.BFC_awg12 { color: #FFFF00; background-color: inherit; }
+.BFC_awg10 { color: orange;  background-color: inherit; }
+.BFC_awg8  { color: #EEE;    background-color: inherit; }
+.BFC_awg6  { color: #CCC;    background-color: inherit; }
+
+button.BFC {
+	border: solid 1px #555;
+	color: #0FF;
+	background-color: #000;
+	background: linear-gradient(to bottom, #666, #222, #222, #666); color: #0FF;
+}
+
+
+button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #0FF; }
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
+
+table.BFC        { border: solid 1px #555; }
+.BFC td, .BFC th { border: solid 1px #555; }
+
+.BFC_min_required_size { background-color: #272727; }
+#BFC_Min_Box_Size { color: inherit;}
+
+input.BFC_non_zero { background-color: #000; }
+
+.BFC_suitable_standard_box { background-color: #272727; }
+</template><!--//BFC_THEME_DARK_CYAN-->
 
 
 
