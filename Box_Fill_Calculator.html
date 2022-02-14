@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-12 2030 ET</template>
+<template id=BFC_UPDATED>2022-02-13 1925 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -33,52 +33,37 @@ SOFTWARE.
 
 
 <style>
-body { margin: 0; overflow-y: scroll; background-color: rgb(160,180,200); }
+body { margin: 0; overflow-y: scroll; }
 
 *, *:before, *:after { box-sizing: border-box; }
 
 td h4.BFC { margin: .8rem 0 0 0; }
 
-input.BFC:focus, select.BFC:focus, button.BFC:focus { box-shadow: 0 0 5pt 2pt #0F0; }
+input.BFC, select.BFC {
+	font-size: 1rem;
+	font-family: arial;
+	text-align: center;
+	border-radius: 4px;
+}
 
-input.BFC, select.BFC { font-size: 1rem; font-family: arial; text-align: center; border-radius: 4px; border: solid 1px #888; }
 input[type=text].BFC  { width: 3rem; padding: 1px 0; font-weight: bold }
-input[type=text].BFC:disabled { color: #444 }
 
 select.BFC        { padding: 3px 0rem 1px 0rem; width: 4.5rem; }
 select.BFC option { font-size: 1em; }
 
-
-/*** Damn FF focusring! And styling selects in general...*****************/
-select.BFC:-moz-focusring { color: transparent; text-shadow: 0 0 0 #000; }
-
-select.BFC_awg8:-moz-focusring  { color: transparent; text-shadow: 0 0 0 #FFF;}
-select.BFC_awg6:-moz-focusring  { color: transparent; text-shadow: 0 0 0 #FFF;}
-
-option.BFC_none  { color: black; }
-option.BFC_awg14 { color: black; }
-option.BFC_awg12 { color: black; }
-option.BFC_awg10 { color: black; }
-/*************************************************************************/
-
-
 button.BFC {
-	border-radius: 4px; border: solid 1px gray; 
-	padding: 5px; margin: 0 0 0 0; 
+	border-radius: 4px;
+	padding: 5px;
+	margin: 0 0 0 0; 
 	height: 1.8rem;
+	font-size: 1rem;
 }
+
 button.BFC2 { width: 1.35rem; height: 1.25rem; line-height: .4rem; position: absolute; right: .5rem; top: .5rem; }
-button.BFC:hover  { background-color: #FFF; }
-button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
 
-.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
-
-.BFC:focus             { outline:none; }
-.BFC::-moz-focus-inner { border:0; }
-
-table.BFC        { border-collapse: collapse; border: solid 1px #555; display: inline-table; vertical-align: top; margin: 1rem 0 1rem 0; width: 100%; }
-.BFC td, .BFC th { padding: .3rem; border: solid 1px #555; }
-.BFC th          { padding: .4rem .3rem; font-size: 1.2rem; } 
+table.BFC        { border-collapse: collapse; display: inline-table; vertical-align: top; margin: 1rem 0 1rem 0; width: 100%; }
+.BFC td, .BFC th { padding: .3rem; }
+.BFC th          { padding: .4rem .3rem; font-size: 1.2rem; }
 
 h2.BFC { display: inline-block; margin: 1rem 1rem 0 0; }
 h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
@@ -111,8 +96,8 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 #BFC_results .BFC_allowances { width: 2.5rem; font-weight: normal; }
 #BFC_results .BFC_plain     { background-color: transparent; border-color: transparent; color: inherit; }
 .BFC_results_col_hdrs       { font-weight: bold; }
-.BFC_min_required_size      { background-color: white; }
-#BFC_Min_Box_Size           { color: blue; font-weight: bold; }
+
+#BFC_results td.BFC_result_item_hidden { visibility: hidden; }
 
 #BFC_show_math { width: 1.2rem; height: 1.2rem; line-height: .0rem; float: right; padding: 0 4px 0 3px; }
 
@@ -128,7 +113,7 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 }
 
 
-#BFC_box_list_table     { min-width: 18rem; max-width: 21rem; }
+#BFC_box_list_table     { min-width: 18rem; max-width: 22rem; }
 #BFC_box_list_table td  { text-align: center; padding: .21rem 0; }
 #BFC_box_list_table #BFC_box_list_h2     { font-weight: bold; }
 #BFC_box_list_table td.BFC_boxlist_vol   { padding: .21rem .8rem; }
@@ -137,22 +122,12 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 
 #BFC_show_boxes, #BFC_reset_inputs { margin-top: 1rem; }
 
+
 .BFC_sub_header { font-weight: normal; font-size: 95%; }
 
-.BFC_none2 { } /* For non selects. */
-.BFC_none  { background-color: rgba(255,255,255,.7) } /* For <selects>. */
-.BFC_awg14 { background-color: #FFFee0 }
-.BFC_awg12 { background-color: #FFFF00 }
-.BFC_awg10 { background-color: orange }
-.BFC_awg8  { background-color: #444; color: white; }
-.BFC_awg6  { background-color: #222; color: white; }
-
-.BFC_non_zero { background-color: #dFd; }
 div.BFC_frac { display: inline-block; margin: 0 0 0 .1rem; }
 sup.BFC_frac, sub.BFC_frac { margin: 0; display: inline-block; font-size: 70%; }
 
-
-.BFC_suitable_standard_box { background-color: #FFF; font-weight: bold }
 
 noscript.BFC {
     position: fixed;
@@ -165,7 +140,7 @@ noscript.BFC {
 
 noscript.BFC h2 {  margin: .5rem .5rem; }
 
-.BFC_disclaimer { display: inline-block; border: solid 1px #555; padding: 1rem; margin: .5rem 0; }
+.BFC_disclaimer { display: inline-block; border: solid 1px #555; padding: 1rem; margin: .5rem 0; font-weight: normal; }
 
 #BFC_license_onscreen {
 	font-family: courier;
@@ -208,6 +183,133 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 /***************************************/
 </style>
 
+
+
+
+
+<!-- *******************************************************************************************************
+	 The default and current themes are contained within separate <style>s, but all other themes are in <templete>s.
+	 Themes (except the default) don't need to contain all theme-able styles, only those different than the default.
+	 Finally, <style THEME_DEFAULT> must come before <style THEME_current>.
+*********************************************************************************************************-->
+
+
+
+
+
+<style class=BFC_theme id=BFC_THEME_DEFAULT data-BFC_theme_desc="Default Theme">
+body { background-color: rgb(160,180,200); }
+
+.BFC:focus { outline: solid 3px #0FF; }
+
+input.BFC, select.BFC { border: solid 1px #888; color: black; background-color: white; }
+
+input[type=text].BFC:disabled { color: #333; background-color: rgba(255,255,255,.7) }
+
+select.BFC_none  { background-color: rgba(255,255,255,.7) }
+
+select.BFC_awg14 { background-color: #FFFee0 }
+select.BFC_awg12 { background-color: #FFFF00 }
+select.BFC_awg10 { background-color: orange }
+select.BFC_awg8  { background-color: #444; color: white; }
+select.BFC_awg6  { background-color: #222; color: white; }
+
+option.BFC_awg14 { color: black; }
+option.BFC_awg12 { color: black; }
+option.BFC_awg10 { color: black; }
+option.BFC_awg8  { color: white; }
+option.BFC_awg6  { color: white; }
+
+.BFC_awg14 { background-color: #FFFee0 }
+.BFC_awg12 { background-color: #FFFF00 }
+.BFC_awg10 { background-color: orange }
+.BFC_awg8  { background-color: #444; color: white; }
+.BFC_awg6  { background-color: #222; color: white; }
+
+button.BFC {
+	border: solid 1px gray; 
+}
+
+button.BFC:hover { background-color: #FFF; }
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
+
+table.BFC        { border: solid 1px #555; }
+.BFC td, .BFC th { border: solid 1px #555; }
+
+.BFC_min_required_size { background-color: white; }
+#BFC_Min_Box_Size { color: blue; }
+
+#BFC_show_boxes { }
+
+input.BFC_non_zero { }
+
+.BFC_suitable_standard_box { background-color: white; }
+</style><!--//BFC_THEME_DEFAULT-->
+
+
+
+
+<!--MUST come after <style id=BFC_THEME_DEFAULT>. -->
+<style id=BFC_THEME_CURRENT>/* Populated onload */</style>
+
+
+
+
+<template id=BFC_THEME_DARK_GREEN>
+body { background-color: black; color: #0F0; }
+
+.BFC:focus { outline: solid 3px #0F0; }
+
+input.BFC, select.BFC { border: solid 1px #888; color: white; background-color: black;}
+
+input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
+
+select.BFC_none  { color: rgba(0,255,0,.8); }
+
+select.BFC_awg14 { color: #FFFee0; }
+select.BFC_awg12 { color: #FFFF00; }
+select.BFC_awg10 { color: orange;  }
+select.BFC_awg8  { color: #EEE;    }
+select.BFC_awg6  { color: #CCC;    }
+
+option.BFC_awg14 { color: #FFFee0; }
+option.BFC_awg12 { color: #FFFF00; }
+option.BFC_awg10 { color: orange;  }
+option.BFC_awg8  { color: #EEE;    }
+option.BFC_awg6  { color: #CCC;    }
+
+.BFC_awg14 { color: #FFFee0; background-color: inherit; }
+.BFC_awg12 { color: #FFFF00; background-color: inherit; }
+.BFC_awg10 { color: orange;  background-color: inherit; }
+.BFC_awg8  { color: #EEE;    background-color: inherit; }
+.BFC_awg6  { color: #CCC;    background-color: inherit; }
+
+button.BFC {
+	border: solid 1px #555;
+	color: #0F0;
+	background-color: #333;
+	background: linear-gradient(to bottom, #777,#555, #222, #222, #555, #777); color: #0F0;
+}
+
+button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #0F0; }
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
+
+table.BFC        { border: solid 1px #555; }
+.BFC td, .BFC th { border: solid 1px #555; }
+
+.BFC_min_required_size { background-color: #272727; }
+#BFC_Min_Box_Size { color: inherit;}
+
+#BFC_show_boxes { color: #0F0; }
+
+input.BFC_non_zero { background-color: #444; }
+
+.BFC_suitable_standard_box { background-color: #272727; }
+</template><!--//BFC_THEME_DARK_GREEN-->
 
 
 
@@ -364,13 +466,11 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 		</td>
 		<td>
 			<select class=BFC id=BFC_largest_EGC>
-				<optgroup label="">
 				<option class=BFC_awg14 value="awg14">#14</option>
 				<option class=BFC_awg12 value="awg12">#12</option>
 				<option class=BFC_awg10 value="awg10">#10</option>
 				<option class=BFC_awg8  value="awg8" >#8</option>
 				<option class=BFC_awg6  value="awg6" >#6</option>
-				</optgroup>
 			</select>
 		</td>
 	</tr>
@@ -553,17 +653,12 @@ var $LARGEST_EGC       = E_('largest_EGC');
 
 var $SHOW_MATH = E_('show_math');
 
-var $RESULTS_AWG14 = E_('results_awg14');
-var $RESULTS_AWG12 = E_('results_awg12');
-var $RESULTS_AWG10 = E_('results_awg10');
-var $RESULTS_AWG8  = E_('results_awg8');
-var $RESULTS_AWG6  = E_('results_awg6');
 var $RESULTS_CLAMPS   = E_('results_clamps');
 var $RESULTS_FITTINGS = E_('results_fittings');
 var $RESULTS_DEVICES  = E_('results_devices');
 var $RESULTS_EGC      = E_('results_EGC');
 
-var $ALLOWANCE_CLAMPS    = E_('allowance_Clamps');
+var $ALLOWANCE_CLAMPS   = E_('allowance_Clamps');
 var $ALLOWANCE_FITTINGS = E_('allowance_Fittings');
 var $ALLOWANCE_DEVICES  = E_('allowance_Devices');
 var $ALLOWANCE_GROUND   = E_('allowance_Ground');
@@ -757,12 +852,12 @@ function Set_Style_per_awg($what, new_size, allowance) {
 
 	//Remove any existing size styles...
 	for (var old_size in ALLOWANCES) { $what.classList.remove(NS_ + old_size); }
-	$what.classList.remove(NS_ + 'none2');
+
+	$what.classList.remove(NS_ + "result_item_hidden");
 
 	if (Parse_Int(allowance) == 0) {
-		if ($what.tagName == "SELECT" || $what.tagName == "INPUT")
-			 { new_size = "none"; } 
-		else { new_size = "none2"; }
+		if ($what.tagName == "SELECT" || $what.tagName == "INPUT") { new_size = "none"; }
+		$what.classList.add(NS_ + "result_item_hidden");
 	}
 
 	//Add style for new size.
@@ -796,7 +891,7 @@ function Largest_Conductor_in_Box() {
 
 function Output_Result($output, allowance, size, $result_desc) {
 	//allowance is a number, the result. size will be "awg6", or "awg14", etc...
-	if (allowance < 1) { $output.innerHTML = '--'; }
+	if (allowance < 1) { $output.innerHTML = ''; }
 	else { $output.innerHTML = allowance; }
 
 	if ($result_desc) { Set_Style_per_awg($result_desc, size, allowance); }
@@ -1181,6 +1276,7 @@ function Init() { //***********************************************************/
 	$CONTAINER.style.display = "block";
 
 	INIT = false;
+
 }//end Init() //***************************************************************/
 
 
