@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-13 1925 ET</template>
+<template id=BFC_UPDATED>2022-02-13 2230 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -50,6 +50,8 @@ input[type=text].BFC  { width: 3rem; padding: 1px 0; font-weight: bold }
 
 select.BFC        { padding: 3px 0rem 1px 0rem; width: 4.5rem; }
 select.BFC option { font-size: 1em; }
+
+select#BFC_theme_select { width: 10rem; }
 
 button.BFC {
 	border-radius: 4px;
@@ -188,9 +190,10 @@ div.BFC_wrap_hack1 { display: inline-block; width: 2.0rem; }
 
 
 <!-- *******************************************************************************************************
-	 The default and current themes are contained within separate <style>s, but all other themes are in <templete>s.
-	 Themes (except the default) don't need to contain all theme-able styles, only those different than the default.
-	 Finally, <style THEME_DEFAULT> must come before <style THEME_current>.
+	All themes must have the class BFC_theme.
+	The default is contained within a <style>, but all other themes are in <templete>s.
+	Themes (except the default) don't need to contain all theme-able styles, only those different than the default.
+	Finally, <style THEME_CURRENT> must come after <style THEME_DEFAULT>.
 *********************************************************************************************************-->
 
 
@@ -251,18 +254,12 @@ input.BFC_non_zero { }
 
 
 
-<!--MUST come after <style id=BFC_THEME_DEFAULT>. -->
-<style id=BFC_THEME_CURRENT>/* Populated onload */</style>
-
-
-
-
-<template id=BFC_THEME_DARK_GREEN>
+<template class=BFC_theme id=BFC_THEME_DARK_GREEN data-BFC_theme_desc="Dark Green">
 body { background-color: black; color: #0F0; }
 
 .BFC:focus { outline: solid 3px #0F0; }
 
-input.BFC, select.BFC { border: solid 1px #888; color: white; background-color: black;}
+input.BFC, select.BFC { border: solid 1px #888; color: #0F0; background-color: black;}
 
 input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
 
@@ -311,6 +308,10 @@ input.BFC_non_zero { background-color: #444; }
 .BFC_suitable_standard_box { background-color: #272727; }
 </template><!--//BFC_THEME_DARK_GREEN-->
 
+
+
+<!--MUST come after <style id=BFC_THEME_DEFAULT>. -->
+<style id=BFC_theme_current>/* Populated onload */</style>
 
 
 <div id=BFC_container>
@@ -576,6 +577,11 @@ List Standard Metal Boxes:
 	<option value=all>All</option>
 </select>
 
+
+<br><br><br><br><br><br><br>
+Page Theme:
+<select class=BFC id=BFC_theme_select><!--//Populated Onload--></select>
+
 </div><!--//end BFC_results_and_reset -->
 
 
@@ -625,9 +631,17 @@ var WIRE_SIZES = ['awg14', 'awg12', 'awg10', 'awg8', 'awg6'];
 //Space allowance per conductor for given wire sizes, in cubic inches.
 var ALLOWANCES = {"none": 0, 'awg14':2.00, 'awg12':2.25, 'awg10':2.50, 'awg8':3.00, 'awg6':5.00}
 
-//Used in Save_to_localStorage(). Thought it was also going to be used in Load_from_localStorage(), but no.
+//Used in Save_to_localStorage(). Thought it was also going to be used in Load_from_localStorage(), but no. //##### At least not yet...
 var CONDUCTOR_TYPES  = ['terms', 'splices', 'pass', 'loops'];
-var ADDITIONAL_TYPES = ['internal_clamp', 'support_fittings', 'devices', 'largest_device_conductor', 'EGC_count', 'largest_EGC'];
+var ADDITIONAL_TYPES = [
+	'internal_clamp',
+	'support_fittings',
+	'devices',
+	'largest_device_conductor',
+	'EGC_count',
+	'largest_EGC',
+	'theme_select' //##### 
+];
 
 var INIT = true; //Used during Init().
 
@@ -681,6 +695,8 @@ var $SHOW_HELP_ADD_FILL = E_('show_help_add_fill');
 
 var $RESET_INPUTS = E_('reset_inputs');
 var $SHOW_BOXES   = E_('show_boxes');
+var $THEME_SELECT = E_('theme_select');
+var $THEME_CURRENT = E_('theme_current');
 
 var $UPDATED           = E_('UPDATED');
 var $UPDATED_DISPLAYED = E_('updated_displayed');
@@ -1096,6 +1112,22 @@ function Calculate_Min_Box_Size() {
 
 
 
+function Populate_Theme_Select() {
+	var themes = D.getElementsByClassName(NS_ + "theme");
+	var nsl = NS_.length;
+	var theme_options = "";
+	for (var t = 0; t < themes.length; t++) {
+		var name = themes[t].id.substr(nsl);	
+		var desc = themes[t].getAttribute('data-' + NS_ +'theme_desc');
+		theme_options += "<option value=" + name + ">" + desc + "</option>\n";
+	}
+
+	$THEME_SELECT.innerHTML = theme_options;
+}//end Populate_Theme_Select()
+
+
+
+
 function Parse_Json(string) {
 	//Currently, only used to parse returned saved settings from localStorage.
 	//If the parse fails, return null, as localStorage does if a localStorage item doesn't exit.
@@ -1159,7 +1191,8 @@ function Assign_Events() {
 	D.addEventListener("keyup",   function(e) { Space_or_Enter_on_Button(e); });
 
 
-	//Note: Save_to_localStorage() is the last line of Calculate_Min_Box_Size(), so is not needed after it in events functions.
+	//Note: Save_to_localStorage() is the last line of Calculate_Min_Box_Size(),
+	//      so it is not needed in event handlers that call Calculate_Min_Box_Size().
 
 	for (var size of WIRE_SIZES) {
 		$TERMS  [size].oninput = function(){ Calculate_Min_Box_Size(); Highlight_Input(this); }
@@ -1236,6 +1269,12 @@ function Assign_Events() {
 		else                      { localStorage.setItem(this.id, this.value); }
 	}
 
+
+	$THEME_SELECT.addEventListener('change', function(){
+		$THEME_CURRENT.innerHTML = E_($THEME_SELECT.value).innerHTML;
+		Save_to_localStorage();
+	});
+
 }//end Assign_Events()
 
 
@@ -1249,10 +1288,12 @@ function Init() { //***********************************************************/
 
 	Sort_Format_STANDARD_BOXES();
 
+	Populate_Theme_Select();
+
 	Load_from_localStorage();
 
 	Init_Input_States();
-
+	
 	Show_Hide_Class('help_con_fill',       $SHOW_HELP_CON_FILL, '+', '-')
 	Show_Hide_Class('help_add_fill',       $SHOW_HELP_ADD_FILL, '+', '-')
 	Show_Hide_Class('allowance_math',      $SHOW_MATH,          '+', '-')
@@ -1273,10 +1314,11 @@ function Init() { //***********************************************************/
 
 	$UPDATED_DISPLAYED.innerHTML = "Updated " + $UPDATED.innerHTML;
 
+	if ($THEME_SELECT.selectedIndex) { $THEME_CURRENT.innerHTML = E_($THEME_SELECT.value).innerHTML; }
+
 	$CONTAINER.style.display = "block";
 
 	INIT = false;
-
 }//end Init() //***************************************************************/
 
 
