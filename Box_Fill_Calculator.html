@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-13 2230 ET</template>
+<template id=BFC_UPDATED>2022-02-14_0020 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -77,7 +77,7 @@ h4.BFC { display: inline-block; margin: 0 0 .5rem 0; }
 .BFC_results_and_reset    { display: inline-block; margin: 0 1rem 1rem 0;}
 
 .BFC_conductors td { width: 20% } /* See comments & styles at end of sytle sheet. */
-.BFC_conductors td.wiresize { text-align: center; }
+.BFC_conductors td.BFC_wiresize { text-align: center; }
 
 #BFC_conductor_help { display: inline-block; border-top: dotted 1px #555; margin-top: .3rem; padding: .3rem 0; font-weight: normal; font-size: .9rem}
 
@@ -287,7 +287,7 @@ button.BFC {
 	border: solid 1px #555;
 	color: #0F0;
 	background-color: #333;
-	background: linear-gradient(to bottom, #777,#555, #222, #222, #555, #777); color: #0F0;
+	background: linear-gradient(to bottom, #555, #222, #222, #555); color: #0F0;
 }
 
 button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #0F0; }
@@ -346,11 +346,11 @@ input.BFC_non_zero { background-color: #444; }
 			<div class=BFC_help_con_fill>Enter number of conductors that originate outside the box and terminate in the box.</div>
 	</td></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_terms_awg14 maxlength=2></td>
-		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_terms_awg12 maxlength=2></td>
-		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_terms_awg10 maxlength=2></td>
-		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_terms_awg8  maxlength=2></td>
-		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_terms_awg6  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_terms_awg14 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_terms_awg12 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_terms_awg10 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_terms_awg8  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_terms_awg6  maxlength=2></td>
 	</tr>
 
 	<tr><td colspan=5>
@@ -358,11 +358,11 @@ input.BFC_non_zero { background-color: #444; }
 			<div class=BFC_help_con_fill>Enter number of conductors that originate outside the box and are spliced in the box.</div>
 	</td></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_splices_awg14 maxlength=2></td>
-		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_splices_awg12 maxlength=2></td>
-		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_splices_awg10 maxlength=2></td>
-		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_splices_awg8  maxlength=2></td>
-		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_splices_awg6  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_splices_awg14 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_splices_awg12 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_splices_awg10 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_splices_awg8  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_splices_awg6  maxlength=2></td>
 	</tr>
 
 	<tr><td colspan=5>
@@ -370,11 +370,11 @@ input.BFC_non_zero { background-color: #444; }
 			<div class=BFC_help_con_fill>Enter number of conductors that pass through the box without splice or termination.</div>
 	</td></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_pass_awg14 maxlength=2></td>
-		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_pass_awg12 maxlength=2></td>
-		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_pass_awg10 maxlength=2></td>
-		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_pass_awg8  maxlength=2></td>
-		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_pass_awg6  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_pass_awg14 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_pass_awg12 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_pass_awg10 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_pass_awg8  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_pass_awg6  maxlength=2></td>
 	</tr>
 
 	<tr><td colspan=5>
@@ -382,11 +382,11 @@ input.BFC_non_zero { background-color: #444; }
 			<div class=BFC_help_con_fill>Enter the number of loops or coils of unbroken conductors that are at least 12" in length. Each 12" loop or coil will be counted twice in the calculations.</div>
 	</td></tr>
 	<tr>
-		<td class="wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_loops_awg14 maxlength=2></td>
-		<td class="wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_loops_awg12 maxlength=2></td>
-		<td class="wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_loops_awg10 maxlength=2></td>
-		<td class="wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_loops_awg8  maxlength=2></td>
-		<td class="wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_loops_awg6  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg14"><div class=BFC_wrap_hack1>#14</div><input type=text class=BFC id=BFC_loops_awg14 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg12"><div class=BFC_wrap_hack1>#12</div><input type=text class=BFC id=BFC_loops_awg12 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg10"><div class=BFC_wrap_hack1>#10</div><input type=text class=BFC id=BFC_loops_awg10 maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg8" ><div class=BFC_wrap_hack1>#8 </div><input type=text class=BFC id=BFC_loops_awg8  maxlength=2></td>
+		<td class="BFC_wiresize BFC_awg6" ><div class=BFC_wrap_hack1>#6 </div><input type=text class=BFC id=BFC_loops_awg6  maxlength=2></td>
 	</tr>
 </table>
 
@@ -640,7 +640,6 @@ var ADDITIONAL_TYPES = [
 	'largest_device_conductor',
 	'EGC_count',
 	'largest_EGC',
-	'theme_select' //##### 
 ];
 
 var INIT = true; //Used during Init().
@@ -1251,6 +1250,9 @@ function Assign_Events() {
 		$SHOW_MATH.value = '';
 		Show_Hide_Class('allowance_math', $SHOW_MATH, "+", "-");
 
+		$SHOW_LICENSE.value = '';
+		Show_Hide_Class('copyright_container', $SHOW_LICENSE, 'Show License', 'Hide License')
+
 		localStorage.removeItem(NS_ + "SETTINGS");
 	}
 
@@ -1272,7 +1274,9 @@ function Assign_Events() {
 
 	$THEME_SELECT.addEventListener('change', function(){
 		$THEME_CURRENT.innerHTML = E_($THEME_SELECT.value).innerHTML;
-		Save_to_localStorage();
+		
+		if (this.selectedIndex == 0) { localStorage.removeItem(this.id); }
+		else                         { localStorage.setItem(this.id, this.value); }
 	});
 
 }//end Assign_Events()
@@ -1292,6 +1296,8 @@ function Init() { //***********************************************************/
 
 	Load_from_localStorage();
 
+	Calculate_Min_Box_Size();
+
 	Init_Input_States();
 	
 	Show_Hide_Class('help_con_fill',       $SHOW_HELP_CON_FILL, '+', '-')
@@ -1299,10 +1305,8 @@ function Init() { //***********************************************************/
 	Show_Hide_Class('allowance_math',      $SHOW_MATH,          '+', '-')
 	Show_Hide_Class('copyright_container', $SHOW_LICENSE, 'Show License', 'Hide License')
 
-	$LICENSE_ONSCREEN.innerHTML = $LICENSE.innerHTML.trim();
-
 	//Populate per conductor allowances for results math.
-	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size].toFixed(2); }
+	for (var size of WIRE_SIZES) { E_("per_" + size).value = ALLOWANCES[size].toFixed(2) + " HEHE"; }
 
 	$SHOW_BOXES.value = localStorage.getItem($SHOW_BOXES.id);
 	if ($SHOW_BOXES.value !== "all" && $SHOW_BOXES.value !== "some") { 
@@ -1310,11 +1314,17 @@ function Init() { //***********************************************************/
 		localStorage.removeItem($SHOW_BOXES.id);
 	}
 
-	Calculate_Min_Box_Size();
+	$THEME_SELECT.value = localStorage.getItem($THEME_SELECT.id);
+	if (E_($THEME_SELECT.value)) {
+		$THEME_CURRENT.innerHTML = E_($THEME_SELECT.value).innerHTML;
+	} else {
+		$THEME_SELECT.selectedIndex = 0;
+		localStorage.removeItem($THEME_SELECT.id);
+	}
+	
+	$LICENSE_ONSCREEN.innerHTML = $LICENSE.innerHTML.trim();
 
 	$UPDATED_DISPLAYED.innerHTML = "Updated " + $UPDATED.innerHTML;
-
-	if ($THEME_SELECT.selectedIndex) { $THEME_CURRENT.innerHTML = E_($THEME_SELECT.value).innerHTML; }
 
 	$CONTAINER.style.display = "block";
 
