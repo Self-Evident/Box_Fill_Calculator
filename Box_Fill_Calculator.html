@@ -5,7 +5,7 @@
 
 <title>The Box Fill Calculator</title>
 
-<template id=BFC_UPDATED>2022-02-14_0020 ET</template>
+<template id=BFC_UPDATED>2022-02-14_0120 ET</template>
 
 <template id=BFC_LICENSE>
 Copyright © 2019   https://github.com/Self-Evident
@@ -244,8 +244,6 @@ table.BFC        { border: solid 1px #555; }
 .BFC_min_required_size { background-color: white; }
 #BFC_Min_Box_Size { color: blue; }
 
-#BFC_show_boxes { }
-
 input.BFC_non_zero { }
 
 .BFC_suitable_standard_box { background-color: white; }
@@ -262,8 +260,8 @@ body { background-color: black; color: #0F0; }
 input.BFC, select.BFC { border: solid 1px #888; color: #0F0; background-color: black;}
 
 input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
-
-select.BFC_none  { color: rgba(0,255,0,.8); }
+n 
+select.BFC_none  { color: #0D0; }
 
 select.BFC_awg14 { color: #FFFee0; }
 select.BFC_awg12 { color: #FFFF00; }
@@ -287,10 +285,10 @@ button.BFC {
 	border: solid 1px #555;
 	color: #0F0;
 	background-color: #333;
-	background: linear-gradient(to bottom, #555, #222, #222, #555); color: #0F0;
+	background: linear-gradient(to bottom, #555, #222, #222, #555);
 }
 
-button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #0F0; }
+button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); }
 button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
 
 .BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
@@ -301,8 +299,6 @@ table.BFC        { border: solid 1px #555; }
 .BFC_min_required_size { background-color: #272727; }
 #BFC_Min_Box_Size { color: inherit;}
 
-#BFC_show_boxes { color: #0F0; }
-
 input.BFC_non_zero { background-color: #444; }
 
 .BFC_suitable_standard_box { background-color: #272727; }
@@ -310,8 +306,66 @@ input.BFC_non_zero { background-color: #444; }
 
 
 
+
+<template class=BFC_theme id=BFC_THEME_DARK_Amber data-BFC_theme_desc="Dark Amber">
+body { background-color: black; color: #FFbf00; }
+
+.BFC:focus { outline: solid 3px #FFbf00; }
+
+input.BFC, select.BFC { border: solid 1px #888; color: #FFbf00;; background-color: black;}
+
+input[type=text].BFC:disabled { color: #AAA; background-color: inherit; }
+
+select.BFC_none  { color: #DDae00; }
+
+select.BFC_awg14 { color: #FFFee0; }
+select.BFC_awg12 { color: #FFFF00; }
+select.BFC_awg10 { color: orange;  }
+select.BFC_awg8  { color: #EEE;    }
+select.BFC_awg6  { color: #CCC;    }
+
+option.BFC_awg14 { color: #FFFee0; }
+option.BFC_awg12 { color: #FFFF00; }
+option.BFC_awg10 { color: orange;  }
+option.BFC_awg8  { color: #EEE;    }
+option.BFC_awg6  { color: #CCC;    }
+
+.BFC_awg14 { color: #FFFee0; background-color: inherit; }
+.BFC_awg12 { color: #FFFF00; background-color: inherit; }
+.BFC_awg10 { color: orange;  background-color: inherit; }
+.BFC_awg8  { color: #EEE;    background-color: inherit; }
+.BFC_awg6  { color: #CCC;    background-color: inherit; }
+
+button.BFC {
+	border: solid 1px #444;
+	color: #FFbf00;
+	background-color: #333;
+	background: linear-gradient(to bottom, #666, #222, #222, #666); color: #FFbf00;
+}
+
+button.BFC:hover { background: linear-gradient(to bottom, #AAA,#666, #333, #333, #666, #AAA); color: #FFbf00; }
+button.BFC:active { border: solid 2px #888; }  /* Must come after :hover. For mouse down events. */
+
+.BFC.BFC_button_active { border: solid 2px #888; } /* For spacebar & enter keydown/up events. */
+
+table.BFC        { border: solid 1px #996900; }
+.BFC td, .BFC th { border: solid 1px #996900; }
+
+.BFC_min_required_size { background-color: #272727; }
+#BFC_Min_Box_Size { color: inherit;}
+
+input.BFC_non_zero { background-color: #444; }
+
+.BFC_suitable_standard_box { background-color: #272727; }
+</template><!--//BFC_THEME_DARK_AMBER-->
+
+
+
+
 <!--MUST come after <style id=BFC_THEME_DEFAULT>. -->
 <style id=BFC_theme_current>/* Populated onload */</style>
+
+
 
 
 <div id=BFC_container>
@@ -1299,7 +1353,7 @@ function Init() { //***********************************************************/
 	Calculate_Min_Box_Size();
 
 	Init_Input_States();
-	
+
 	Show_Hide_Class('help_con_fill',       $SHOW_HELP_CON_FILL, '+', '-')
 	Show_Hide_Class('help_add_fill',       $SHOW_HELP_ADD_FILL, '+', '-')
 	Show_Hide_Class('allowance_math',      $SHOW_MATH,          '+', '-')
@@ -1321,7 +1375,7 @@ function Init() { //***********************************************************/
 		$THEME_SELECT.selectedIndex = 0;
 		localStorage.removeItem($THEME_SELECT.id);
 	}
-	
+
 	$LICENSE_ONSCREEN.innerHTML = $LICENSE.innerHTML.trim();
 
 	$UPDATED_DISPLAYED.innerHTML = "Updated " + $UPDATED.innerHTML;
